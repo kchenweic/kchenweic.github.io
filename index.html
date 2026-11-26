@@ -1,0 +1,108 @@
+<!doctype html>
+<html lang="zh-Hant-TW">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="ChenWeic 的個人網站，記錄在嘉義大學資工系做過的課程作品。">
+  <title>ChenWeic｜個人網站</title>
+  <style>
+    :root {
+      color-scheme: light;
+      font-family: system-ui, "Microsoft JhengHei", sans-serif;
+      color: #292d28;
+      background: #f8f7f2;
+      line-height: 1.75;
+    }
+    * { box-sizing: border-box; }
+    body { margin: 0; }
+    .wrap { width: min(100% - 36px, 760px); margin-inline: auto; }
+    a { color: #2c5746; text-underline-offset: .22em; }
+    a:hover { color: #163b2e; }
+    a:focus-visible { outline: 2px solid #2c5746; outline-offset: 5px; }
+    header { border-bottom: 1px solid #deded4; }
+    header .wrap {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: space-between;
+      align-items: center;
+      gap: 8px 24px;
+      padding-block: 18px;
+    }
+    header a { color: inherit; text-decoration: none; }
+    header a:hover { text-decoration: underline; }
+    .site-name { font-weight: 700; }
+    nav { display: flex; gap: 20px; }
+    .intro { padding-block: clamp(48px, 10vw, 92px) 44px; }
+    .intro h1 {
+      margin: 0 0 16px;
+      font-size: clamp(2rem, 7vw, 3.4rem);
+      line-height: 1.25;
+      letter-spacing: -.04em;
+    }
+    .intro p { max-width: 34em; margin: 0; color: #4b5149; }
+    h2 { font-size: 1.45rem; margin: 0 0 14px; }
+    .projects { padding-bottom: 42px; }
+    article {
+      display: grid;
+      grid-template-columns: 1fr auto;
+      gap: 6px 20px;
+      border-top: 1px solid #deded4;
+      padding-block: 21px;
+    }
+    h3 { margin: 0; font-size: 1.12rem; }
+    article p { grid-column: 1 / -1; margin: 0; color: #4b5149; }
+    .topic { color: #4b5149; font-size: .88rem; }
+    footer { border-top: 1px solid #deded4; padding-block: 20px 30px; }
+    footer small { color: #4b5149; }
+    @media (max-width: 480px) {
+      article { grid-template-columns: 1fr; }
+      .topic { grid-row: 1; }
+    }
+  </style>
+</head>
+<body id="top">
+  <header>
+    <div class="wrap">
+      <a class="site-name" href="#top">ChenWeic</a>
+      <nav aria-label="主選單">
+        <a href="#about">關於我</a>
+        <a href="#projects">作品</a>
+        <a href="https://github.com/kchenweic">GitHub</a>
+      </nav>
+    </div>
+  </header>
+
+  <main class="wrap">
+    <section class="intro" id="about" aria-labelledby="intro-title">
+      <h1 id="intro-title">嗨，我是 ChenWeic。</h1>
+      <p>我在嘉義大學讀資工。我喜歡寫小遊戲，最近也在用溫室的感測資料做溫度預測。這裡放的是我做過的幾個課程作品。</p>
+    </section>
+
+    <section class="projects" id="projects" aria-labelledby="projects-title">
+      <h2 id="projects-title">課程作品</h2>
+
+      <article>
+        <h3>糖果三消</h3>
+        <span class="topic">Windows Forms</span>
+        <p>在 9×9 棋盤上交換相鄰糖果，連成三顆就能消除。關卡有清果凍和收集掉落物等目標，還加了特殊糖果和通關動畫。</p>
+      </article>
+
+      <article>
+        <h3>黑白棋</h3>
+        <span class="topic">Windows Forms</span>
+        <p>可以跟電腦對戰。棋盤會標出能下的位置和各步能翻的棋子數，遇到無棋可下時也會提示跳過回合。</p>
+      </article>
+
+      <article>
+        <h3>溫室溫度預測</h3>
+        <span class="topic">Python · XGBoost</span>
+        <p>用室外天氣和風扇等設備的狀態，預測 20 分鐘後的室內溫度，再比較不同日期的預測誤差。</p>
+      </article>
+    </section>
+  </main>
+
+  <footer>
+    <div class="wrap"><small>ChenWeic 的個人網站</small></div>
+  </footer>
+</body>
+</html>
