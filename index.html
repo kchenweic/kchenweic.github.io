@@ -1,0 +1,47 @@
+<!doctype html>
+<html lang="zh-Hant">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="description" content="陳辰瑋的個人網站，展示視窗程式設計課程。">
+<title>陳辰瑋｜個人網站</title>
+<style>
+:root{font-family:system-ui,"Microsoft JhengHei",sans-serif;color:#16352b;background:#f6f5ef;scroll-behavior:smooth}
+*{box-sizing:border-box}body{margin:0}a{color:inherit}.wrap{width:min(1100px,calc(100% - 40px));margin:auto}
+header,.hero{background:#12271f;color:#f8f9f2}header .wrap{min-height:76px;display:flex;justify-content:space-between;align-items:center;gap:16px}
+header a{text-decoration:none}header a:hover{color:#cfe6aa}.brand{font-weight:750;font-size:1.1rem}.nav{font-size:.92rem;color:#d4ded3}
+.hero{position:relative;overflow:hidden;padding:clamp(85px,13vw,150px) 0 clamp(100px,14vw,155px)}
+.hero:after{content:"";position:absolute;right:-10%;top:-30%;width:min(65vw,650px);aspect-ratio:1;border:1px solid #8ba58255;border-radius:50%;box-shadow:0 0 0 85px #9dbb8910,0 0 0 170px #9dbb890a}
+.hero .wrap{position:relative;z-index:1}.eyebrow{color:#cfe8a8;font-size:.82rem;font-weight:700;letter-spacing:.18em;margin:0 0 22px}
+h1{font-size:clamp(3.6rem,11vw,7.5rem);line-height:1.1;letter-spacing:-.065em;margin:0}.subtitle{color:#cbd8ca;font-size:clamp(1rem,2.3vw,1.3rem);margin:25px 0 0}
+.accent{height:3px;width:64px;background:#cce49a;margin-top:38px}
+main{padding:85px 0 110px}h2{font-size:clamp(1.6rem,4vw,2.1rem);letter-spacing:-.04em;margin:0 0 25px}
+.info{display:grid;grid-template-columns:repeat(5,1fr);background:#fffefa;border:1px solid #dce1d5;border-radius:18px;overflow:hidden}
+.item{padding:30px 18px;border-right:1px solid #e7e9e2}.item:last-child{border-right:0}
+.label{display:block;color:#718276;font-size:.83rem;margin-bottom:12px}.value{font-size:clamp(1rem,1.65vw,1.25rem);font-weight:700;white-space:nowrap}
+#course{margin-top:92px}.card{display:grid;grid-template-columns:1fr 1fr;min-height:350px;border-radius:20px;overflow:hidden;border:1px solid #d7dfd4;background:#e9eee3}
+.copy{padding:clamp(32px,5vw,60px);display:flex;flex-direction:column;justify-content:center}.kicker{font-size:.8rem;letter-spacing:.16em;color:#52735c;font-weight:750;margin:0 0 20px}
+h3{font-size:clamp(2rem,4vw,3rem);letter-spacing:-.055em;margin:0 0 16px}.copy p:last-child{color:#53685a;margin:0;font-size:1rem}
+.art{background:#285240;display:grid;place-items:center;position:relative;overflow:hidden}.art:before{content:"";position:absolute;width:88%;aspect-ratio:1;border:1px solid #ffffff30;border-radius:50%}
+.window{position:relative;width:min(68%,330px);aspect-ratio:1.3;background:#f1f4ec;border-radius:12px;box-shadow:18px 23px 0 #102a2370,0 30px 60px #102a2390;overflow:hidden;transform:rotate(-5deg)}
+.bar{height:18%;background:#d8e3d0;display:flex;align-items:center;gap:6px;padding-left:15px}.dot{width:8px;height:8px;border-radius:50%;background:#83a87c}
+.screen{padding:12%;display:grid;gap:12px}.line{width:83%;height:11px;background:#b9cfb6;border-radius:6px}.line.short{width:55%}.tiles{display:flex;gap:9px;margin-top:10px}.tiles i{width:42px;height:42px;background:#a7c69e;border-radius:8px}.tiles i:nth-child(2){background:#d0dfa8}.tiles i:nth-child(3){background:#d6e3d1}
+footer{border-top:1px solid #dce1d5;padding:26px 0;color:#708274;font-size:.86rem}
+@media(max-width:800px){.info{grid-template-columns:repeat(2,1fr)}.item{border-bottom:1px solid #e7e9e2}.item:nth-child(2n){border-right:0}.item:last-child{border-bottom:0}.card{grid-template-columns:1fr}.art{min-height:290px}}
+@media(max-width:420px){.item{padding:22px 14px}.value{font-size:.95rem}main{padding-top:65px}#course{margin-top:72px}}
+</style>
+</head>
+<body id="top">
+<header><div class="wrap"><a class="brand" href="#top">陳辰瑋</a><a class="nav" href="#course">課程展示 ↗</a></div></header>
+<section class="hero" aria-labelledby="title"><div class="wrap"><p class="eyebrow">PERSONAL WEBSITE · 1142949</p><h1 id="title">陳辰瑋</h1><p class="subtitle">國立嘉義大學　資訊工程學系　資工二甲</p><div class="accent" aria-hidden="true"></div></div></section>
+<main class="wrap">
+<section aria-labelledby="profile"><h2 id="profile">基本資料</h2><div class="info">
+<div class="item"><span class="label">學號</span><span class="value">1142949</span></div>
+<div class="item"><span class="label">姓名</span><span class="value">陳辰瑋</span></div>
+<div class="item"><span class="label">學校</span><span class="value">國立嘉義大學</span></div>
+<div class="item"><span class="label">系別</span><span class="value">資訊工程學系</span></div>
+<div class="item"><span class="label">班級</span><span class="value">資工二甲</span></div>
+</div></section>
+<section id="course" aria-labelledby="course-title"><h2 id="course-title">課程展示</h2><div class="card"><div class="copy"><p class="kicker">WINDOWS FORMS</p><h3>視窗程式設計</h3><p>課程作品展示</p></div><div class="art" aria-hidden="true"><div class="window"><div class="bar"><i class="dot"></i><i class="dot"></i><i class="dot"></i></div><div class="screen"><div class="line"></div><div class="line short"></div><div class="tiles"><i></i><i></i><i></i></div></div></div></div></div></section>
+</main><footer><div class="wrap">© 陳辰瑋 · 1142949</div></footer>
+</body></html>
