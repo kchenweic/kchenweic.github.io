@@ -1,0 +1,1505 @@
+/* ==========================================================================
+   1142949 HW06 — 京都百鬼夜行：陰陽鎮魂錄 (Anime Visual Novel & Tactical Shrine UI)
+   File: css/anime-theme.css
+   Design Aesthetic: Modern Ufotable / Kyoto Anime RPG × Echizen Washi Scroll
+   ========================================================================== */
+
+:root {
+  --bg-abyss: #0b0d13;
+  --bg-night-panel: rgba(16, 19, 28, 0.86);
+  --bg-night-solid: #131722;
+  --bg-night-elevated: rgba(25, 30, 44, 0.92);
+  --bg-scroll-light: #f6ecda;
+  --bg-scroll-mid: #ead8b8;
+  --bg-scroll-deep: #d9bf95;
+
+  /* Hero & Boss Faction Palettes (Zero generic purple-on-dark) */
+  --ren-crimson: #d63826;
+  --ren-crimson-bright: #f2523d;
+  --ren-gold: #e0ad46;
+  --ren-gold-bright: #ffe08a;
+
+  --tamamo-cyan: #16a89a;
+  --tamamo-cyan-bright: #49f2e1;
+  --ibaraki-ember: #d94126;
+  --ibaraki-amber: #ffaa33;
+  --tengu-emerald: #19a873;
+  --tengu-wind: #6df2b8;
+
+  /* Active Boss Dynamic Theme Accent (Updated by JS per Chapter/Boss) */
+  --boss-primary: #16a89a;
+  --boss-bright: #49f2e1;
+  --boss-soft: rgba(22, 168, 154, 0.2);
+
+  /* Text Hierarchy */
+  --txt-bright: #f8f1e5;
+  --txt-secondary: #cbbba2;
+  --txt-muted: #93836d;
+  --ink-dark: #1c1510;
+  --ink-mid: #4c3b2e;
+
+  /* Borders & Framing */
+  --border-gold-subtle: rgba(224, 173, 70, 0.32);
+  --border-gold-strong: rgba(245, 202, 105, 0.78);
+  --shadow-anime-panel: 0 20px 50px rgba(0, 0, 0, 0.68), 0 4px 16px rgba(0, 0, 0, 0.45);
+
+  /* Typography */
+  --font-serif: "Shippori Mincho", "Noto Serif TC", "Songti TC", "PMingLiU", serif;
+  --font-brush: "Yuji Syuku", "Noto Serif TC", "Kaiti TC", "DFKai-SB", serif;
+  --font-ui: "Noto Sans TC", "PingFang TC", "Microsoft JhengHei", sans-serif;
+}
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+html,
+body {
+  min-height: 100%;
+  background-color: var(--bg-abyss);
+  color: var(--txt-bright);
+  font-family: var(--font-serif);
+  line-height: 1.5;
+  overflow-x: hidden;
+  -webkit-font-smoothing: antialiased;
+  user-select: none;
+}
+
+/* ==========================================================================
+   Dynamic Full-Bleed Anime Stage Backdrop
+   ========================================================================== */
+.stage-backdrop {
+  position: fixed;
+  inset: 0;
+  z-index: 0;
+  background-color: #0d1017;
+  background-image: url("../assets/bg_fushimi.jpg");
+  background-size: cover;
+  background-position: center center;
+  transition: background-image 0.6s ease, filter 0.4s ease;
+}
+
+.stage-backdrop::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background:
+    radial-gradient(circle at 50% 38%, rgba(12, 15, 24, 0.42) 0%, rgba(9, 11, 18, 0.84) 78%, rgba(6, 8, 13, 0.95) 100%),
+    linear-gradient(180deg, rgba(8, 10, 16, 0.68) 0%, rgba(10, 12, 19, 0.35) 45%, rgba(8, 10, 16, 0.88) 100%);
+}
+
+body[data-stage="rashomon"] .stage-backdrop {
+  background-image: url("../assets/bg_rashomon.jpg");
+}
+
+body[data-stage="kurama"] .stage-backdrop {
+  background-image: url("../assets/bg_kurama.jpg");
+}
+
+body[data-boss="tamamo"] {
+  --boss-primary: #16a89a;
+  --boss-bright: #49f2e1;
+  --boss-soft: rgba(22, 168, 154, 0.22);
+}
+
+body[data-boss="ibaraki"] {
+  --boss-primary: #d95b26;
+  --boss-bright: #ffbe42;
+  --boss-soft: rgba(217, 91, 38, 0.24);
+}
+
+body[data-boss="tengu"] {
+  --boss-primary: #19a873;
+  --boss-bright: #6ef7c2;
+  --boss-soft: rgba(25, 168, 115, 0.22);
+}
+
+/* Global Particle Canvas */
+#fx-canvas {
+  position: fixed;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+  z-index: 28;
+}
+
+body.perf-compat #fx-canvas {
+  display: none;
+}
+
+.cinematic-dim {
+  position: fixed;
+  inset: 0;
+  background: radial-gradient(circle at center, rgba(6, 8, 12, 0.12) 0%, rgba(5, 6, 10, 0.78) 100%);
+  opacity: 0;
+  pointer-events: none;
+  z-index: 6;
+  transition: opacity 0.34s ease;
+}
+
+.cinematic-dim.active {
+  opacity: 1;
+}
+
+/* ==========================================================================
+   Anime Title & Audio Unlock Gate Splash (#title-gate)
+   ========================================================================== */
+.title-gate {
+  position: fixed;
+  inset: 0;
+  z-index: 90;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 20px;
+  background:
+    radial-gradient(circle at 50% 35%, rgba(18, 23, 38, 0.58) 0%, rgba(8, 10, 16, 0.94) 80%),
+    url("../assets/bg_fushimi.jpg") center / cover no-repeat;
+  transition: opacity 0.42s ease, visibility 0.42s ease;
+}
+
+.title-gate.hidden {
+  opacity: 0;
+  visibility: hidden;
+  pointer-events: none;
+}
+
+.title-gate-card {
+  max-width: 940px;
+  width: 100%;
+  background: linear-gradient(155deg, rgba(18, 21, 32, 0.94) 0%, rgba(12, 14, 22, 0.97) 100%);
+  border: 1.5px solid var(--border-gold-strong);
+  border-radius: 18px;
+  padding: 28px 32px;
+  box-shadow: 0 30px 80px rgba(0, 0, 0, 0.85);
+  display: grid;
+  grid-template-columns: 1.15fr 0.85fr;
+  gap: 26px;
+  align-items: center;
+  position: relative;
+  overflow: hidden;
+}
+
+.title-gate-eyebrow {
+  display: inline-block;
+  font-family: var(--font-ui);
+  font-size: 0.76rem;
+  font-weight: 700;
+  letter-spacing: 0.14em;
+  color: var(--ren-gold-bright);
+  border: 1px solid var(--border-gold-subtle);
+  background: rgba(214, 56, 38, 0.2);
+  padding: 4px 12px;
+  border-radius: 4px;
+  margin-bottom: 10px;
+}
+
+.title-gate-heading {
+  font-family: var(--font-brush);
+  font-size: clamp(1.7rem, 3.2vw, 2.55rem);
+  line-height: 1.2;
+  color: var(--txt-bright);
+  letter-spacing: 0.04em;
+}
+
+.title-gate-sub {
+  margin-top: 10px;
+  font-size: 0.94rem;
+  color: var(--txt-secondary);
+  line-height: 1.68;
+}
+
+.title-feature-badges {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-top: 14px;
+}
+
+.title-badge {
+  font-family: var(--font-ui);
+  font-size: 0.75rem;
+  padding: 4px 10px;
+  border-radius: 6px;
+  background: rgba(255, 255, 255, 0.06);
+  border: 1px solid rgba(224, 173, 70, 0.28);
+  color: #f0e3cc;
+}
+
+.title-cta-group {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  margin-top: 22px;
+}
+
+.btn-anime-hero {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  padding: 14px 22px;
+  border-radius: 10px;
+  border: 1.5px solid var(--ren-gold-bright);
+  background: linear-gradient(135deg, #c93322 0%, #8f1d14 100%);
+  color: #fff9f0;
+  font-family: var(--font-brush);
+  font-size: 1.12rem;
+  letter-spacing: 0.06em;
+  cursor: pointer;
+  box-shadow: 0 10px 26px rgba(201, 51, 34, 0.45);
+  transition: transform 0.16s ease, filter 0.18s ease;
+}
+
+.btn-anime-hero:hover {
+  transform: translateY(-2px);
+  filter: brightness(1.1);
+}
+
+.btn-anime-quick {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  padding: 11px 18px;
+  border-radius: 10px;
+  border: 1px solid rgba(73, 242, 225, 0.55);
+  background: rgba(22, 168, 154, 0.18);
+  color: #dcfffb;
+  font-family: var(--font-serif);
+  font-size: 0.9rem;
+  font-weight: 700;
+  cursor: pointer;
+  transition: transform 0.15s ease, background-color 0.18s ease;
+}
+
+.btn-anime-quick:hover {
+  background: rgba(22, 168, 154, 0.3);
+  transform: translateY(-1px);
+}
+
+.title-cast-showcase {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 10px;
+}
+
+.cast-thumb-card {
+  position: relative;
+  height: 158px;
+  border-radius: 12px;
+  overflow: hidden;
+  border: 1px solid var(--border-gold-subtle);
+  background: #141824;
+}
+
+.cast-thumb-card img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: center 18%;
+  transition: transform 0.4s ease;
+}
+
+.cast-thumb-card:hover img {
+  transform: scale(1.06);
+}
+
+.cast-thumb-caption {
+  position: absolute;
+  inset: auto 0 0 0;
+  padding: 18px 10px 7px;
+  background: linear-gradient(0deg, rgba(8, 10, 16, 0.95) 0%, transparent 100%);
+  font-size: 0.76rem;
+  font-family: var(--font-brush);
+  color: var(--txt-bright);
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+}
+
+.cast-thumb-role {
+  font-family: var(--font-ui);
+  font-size: 0.66rem;
+  color: var(--ren-gold-bright);
+}
+
+/* ==========================================================================
+   Top Anime HUD Navigation & Live BGM Studio Bar
+   ========================================================================== */
+.app-shell {
+  position: relative;
+  z-index: 10;
+  max-width: 1320px;
+  margin: 0 auto;
+  padding: 12px 18px 26px;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.anime-hud-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  flex-wrap: wrap;
+  padding: 10px 16px;
+  background: var(--bg-night-panel);
+  backdrop-filter: blur(10px);
+  border: 1px solid var(--border-gold-subtle);
+  border-radius: 12px;
+  box-shadow: var(--shadow-anime-panel);
+}
+
+body.perf-compat .anime-hud-header {
+  backdrop-filter: none;
+  background: var(--bg-night-solid);
+}
+
+.hud-brand {
+  display: flex;
+  align-items: center;
+  gap: 11px;
+}
+
+.hanko-seal {
+  width: 42px;
+  height: 42px;
+  border-radius: 8px;
+  border: 2px solid var(--ren-crimson-bright);
+  background: rgba(214, 56, 38, 0.2);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  font-family: var(--font-brush);
+  font-size: 0.74rem;
+  line-height: 1.06;
+  color: #ffe7db;
+  flex-shrink: 0;
+}
+
+.hud-title-wrap h1 {
+  font-family: var(--font-brush);
+  font-size: clamp(1.04rem, 1.75vw, 1.34rem);
+  color: var(--txt-bright);
+  letter-spacing: 0.04em;
+}
+
+.hud-subtitle {
+  font-family: var(--font-ui);
+  font-size: 0.73rem;
+  color: var(--txt-secondary);
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.rank-pill {
+  padding: 1px 7px;
+  border-radius: 4px;
+  background: rgba(224, 173, 70, 0.2);
+  border: 1px solid var(--border-gold-subtle);
+  color: var(--ren-gold-bright);
+  font-weight: 700;
+}
+
+/* Primary Mode Navigation Tabs */
+.hud-nav-tabs {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  flex-wrap: wrap;
+}
+
+.nav-tab-btn {
+  padding: 6px 12px;
+  border-radius: 7px;
+  border: 1px solid rgba(224, 173, 70, 0.24);
+  background: rgba(15, 18, 28, 0.75);
+  color: var(--txt-secondary);
+  font-family: var(--font-ui);
+  font-size: 0.78rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.16s ease;
+}
+
+.nav-tab-btn:hover {
+  color: var(--txt-bright);
+  border-color: var(--border-gold-strong);
+}
+
+.nav-tab-btn.active {
+  background: linear-gradient(135deg, rgba(214, 56, 38, 0.36) 0%, rgba(224, 173, 70, 0.22) 100%);
+  border-color: var(--ren-gold-bright);
+  color: #fff8ec;
+}
+
+/* BGM Studio & Performance Strip */
+.hud-utility-bar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+  flex-wrap: wrap;
+  padding: 7px 14px;
+  background: rgba(13, 16, 24, 0.84);
+  border: 1px solid rgba(224, 173, 70, 0.22);
+  border-radius: 10px;
+}
+
+.bgm-studio-cluster {
+  display: flex;
+  align-items: center;
+  gap: 9px;
+  flex-wrap: wrap;
+}
+
+.bgm-eq-bars {
+  display: inline-flex;
+  align-items: flex-end;
+  gap: 2px;
+  height: 16px;
+  width: 34px;
+  padding: 1px 0;
+}
+
+.eq-bar {
+  flex: 1;
+  height: 25%;
+  background: linear-gradient(180deg, var(--ren-gold-bright) 0%, var(--boss-bright) 100%);
+  border-radius: 2px;
+  transition: height 0.09s linear;
+}
+
+.bgm-select {
+  background: rgba(22, 27, 40, 0.92);
+  color: var(--txt-bright);
+  border: 1px solid var(--border-gold-subtle);
+  border-radius: 6px;
+  padding: 4px 8px;
+  font-family: var(--font-ui);
+  font-size: 0.75rem;
+  cursor: pointer;
+}
+
+.bgm-vol-slider {
+  width: 72px;
+  accent-color: var(--ren-gold);
+  cursor: pointer;
+}
+
+.util-chip-group {
+  display: flex;
+  align-items: center;
+  gap: 7px;
+  flex-wrap: wrap;
+}
+
+.chip-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  padding: 5px 10px;
+  border-radius: 6px;
+  border: 1px solid rgba(224, 173, 70, 0.28);
+  background: rgba(20, 24, 36, 0.85);
+  color: var(--txt-bright);
+  font-family: var(--font-ui);
+  font-size: 0.75rem;
+  cursor: pointer;
+  transition: border-color 0.16s ease, background-color 0.16s ease;
+}
+
+.chip-btn:hover {
+  border-color: var(--border-gold-strong);
+  background: rgba(224, 173, 70, 0.14);
+}
+
+.chip-btn[aria-pressed="true"] {
+  background: rgba(22, 168, 154, 0.28);
+  border-color: var(--tamamo-cyan-bright);
+  color: #e4fffc;
+}
+
+.perf-indicator-dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: #42e37d;
+}
+
+body.perf-medium .perf-indicator-dot {
+  background: #f5b942;
+}
+
+body.perf-compat .perf-indicator-dot {
+  background: #55ccf2;
+}
+
+/* ==========================================================================
+   Main Battle Stage: Anime Character Duelist Cards + Sacred 3x3 Shrine Grid
+   ========================================================================== */
+.view-section {
+  display: none;
+}
+
+.view-section.active-view {
+  display: block;
+}
+
+.battle-grid-layout {
+  display: grid;
+  grid-template-columns: minmax(320px, 415px) minmax(340px, 1fr);
+  gap: 16px;
+  align-items: stretch;
+}
+
+.duelist-sidebar {
+  display: flex;
+  flex-direction: column;
+  gap: 11px;
+}
+
+/* Chapter Campaign Selector Strip */
+.chapter-selector-strip {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 7px;
+}
+
+.chapter-card-btn {
+  position: relative;
+  padding: 8px 9px;
+  border-radius: 9px;
+  border: 1px solid rgba(224, 173, 70, 0.26);
+  background: rgba(17, 21, 31, 0.88);
+  color: var(--txt-secondary);
+  text-align: left;
+  cursor: pointer;
+  transition: transform 0.15s ease, border-color 0.18s ease, background-color 0.18s ease;
+}
+
+.chapter-card-btn:hover {
+  transform: translateY(-1px);
+  border-color: var(--border-gold-strong);
+}
+
+.chapter-card-btn.active {
+  background: linear-gradient(145deg, rgba(214, 56, 38, 0.28), rgba(22, 28, 42, 0.95));
+  border-color: var(--ren-gold-bright);
+  color: var(--txt-bright);
+}
+
+.chapter-card-num {
+  font-family: var(--font-ui);
+  font-size: 0.67rem;
+  color: var(--ren-gold-bright);
+  font-weight: 700;
+  display: flex;
+  justify-content: space-between;
+}
+
+.chapter-card-name {
+  font-family: var(--font-brush);
+  font-size: 0.86rem;
+  margin-top: 2px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.chapter-clear-mark {
+  color: #54f0a1;
+  font-size: 0.68rem;
+}
+
+/* Dual Anime Portrait Versus Card */
+.versus-portraits-panel {
+  background: var(--bg-night-panel);
+  border: 1px solid var(--border-gold-subtle);
+  border-radius: 13px;
+  padding: 12px;
+  box-shadow: var(--shadow-anime-panel);
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.duelists-row {
+  display: grid;
+  grid-template-columns: 1fr auto 1fr;
+  gap: 8px;
+  align-items: center;
+}
+
+.anime-fighter-card {
+  position: relative;
+  height: 146px;
+  border-radius: 10px;
+  overflow: hidden;
+  border: 1.5px solid rgba(255, 255, 255, 0.16);
+  background: #121621;
+  transition: transform 0.22s ease, border-color 0.22s ease, box-shadow 0.22s ease;
+}
+
+.anime-fighter-card img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: center 14%;
+  transition: transform 0.35s ease;
+}
+
+.anime-fighter-card.active-turn {
+  transform: translateY(-3px);
+}
+
+.anime-fighter-card.hero-card.active-turn {
+  border-color: var(--ren-gold-bright);
+  box-shadow: 0 8px 22px rgba(214, 56, 38, 0.42);
+}
+
+.anime-fighter-card.boss-card.active-turn {
+  border-color: var(--boss-bright);
+  box-shadow: 0 8px 22px var(--boss-soft);
+}
+
+.fighter-overlay-info {
+  position: absolute;
+  inset: auto 0 0 0;
+  padding: 24px 9px 7px;
+  background: linear-gradient(0deg, rgba(7, 9, 14, 0.96) 0%, rgba(7, 9, 14, 0.55) 62%, transparent 100%);
+}
+
+.fighter-camp-tag {
+  font-family: var(--font-ui);
+  font-size: 0.65rem;
+  font-weight: 700;
+  color: var(--ren-gold-bright);
+}
+
+.boss-card .fighter-camp-tag {
+  color: var(--boss-bright);
+}
+
+.fighter-name-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 4px;
+}
+
+.fighter-name {
+  font-family: var(--font-brush);
+  font-size: 0.9rem;
+  color: #fff;
+  white-space: nowrap;
+}
+
+.fighter-seal-mini {
+  position: absolute;
+  top: 7px;
+  right: 7px;
+  width: 30px;
+  height: 30px;
+  border-radius: 50%;
+  background: rgba(10, 12, 18, 0.78);
+  padding: 2px;
+  border: 1px solid rgba(255, 255, 255, 0.28);
+}
+
+.vs-emblem {
+  font-family: var(--font-brush);
+  font-size: 1.25rem;
+  color: var(--ren-gold-bright);
+  text-shadow: 0 2px 10px rgba(214, 56, 38, 0.65);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 4px;
+}
+
+.story-replay-mini-btn {
+  font-family: var(--font-ui);
+  font-size: 0.66rem;
+  padding: 3px 6px;
+  border-radius: 4px;
+  border: 1px solid var(--border-gold-subtle);
+  background: rgba(224, 173, 70, 0.15);
+  color: var(--ren-gold-bright);
+  cursor: pointer;
+}
+
+.story-replay-mini-btn:hover {
+  background: rgba(224, 173, 70, 0.28);
+}
+
+/* Live Anime Dialogue Banter Box inside Battle Sidebar */
+.battle-banter-box {
+  padding: 9px 12px;
+  border-radius: 8px;
+  background: rgba(246, 236, 218, 0.07);
+  border-left: 3px solid var(--boss-bright);
+  min-height: 54px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  gap: 2px;
+}
+
+.banter-speaker {
+  font-family: var(--font-ui);
+  font-size: 0.7rem;
+  font-weight: 700;
+  color: var(--boss-bright);
+  display: flex;
+  justify-content: space-between;
+}
+
+.banter-text {
+  font-size: 0.84rem;
+  color: #f3e8d6;
+  line-height: 1.45;
+}
+
+/* Washi Spirit Vein & 9-Seal Mandatory Full-Board Tracker */
+.washi-status-scroll {
+  background: linear-gradient(180deg, var(--bg-scroll-light) 0%, var(--bg-scroll-mid) 100%);
+  color: var(--ink-dark);
+  border: 2px solid #2e1f16;
+  border-radius: 12px;
+  padding: 12px 14px;
+  box-shadow: var(--shadow-anime-panel), inset 0 0 0 1px rgba(212, 161, 62, 0.45);
+}
+
+.washi-scroll-head {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding-bottom: 6px;
+  margin-bottom: 8px;
+  border-bottom: 1px solid rgba(46, 31, 22, 0.18);
+  font-family: var(--font-brush);
+  font-size: 0.92rem;
+}
+
+.first-vein-pill {
+  font-family: var(--font-ui);
+  font-size: 0.7rem;
+  font-weight: 700;
+  padding: 2px 8px;
+  border-radius: 4px;
+  background: rgba(46, 31, 22, 0.1);
+  color: var(--ink-mid);
+}
+
+.first-vein-pill.human {
+  background: rgba(214, 56, 38, 0.18);
+  color: #9e1f12;
+}
+
+.first-vein-pill.ai {
+  background: rgba(22, 140, 128, 0.2);
+  color: #0b5e55;
+}
+
+.vein-scoreboard-row {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 8px;
+}
+
+.vein-camp-score {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 7px 9px;
+  border-radius: 8px;
+  background: rgba(255, 252, 245, 0.74);
+  border: 1px solid rgba(46, 31, 22, 0.16);
+}
+
+.vein-camp-score svg {
+  width: 34px;
+  height: 34px;
+  flex-shrink: 0;
+}
+
+.vein-score-big {
+  font-family: var(--font-brush);
+  font-size: 1.24rem;
+  font-weight: 700;
+  line-height: 1;
+}
+
+.vein-camp-score.hero .vein-score-big {
+  color: var(--ren-crimson);
+}
+
+.vein-camp-score.boss .vein-score-big {
+  color: #0e7066;
+}
+
+.vein-camp-lbl {
+  font-family: var(--font-ui);
+  font-size: 0.71rem;
+  color: var(--ink-mid);
+  font-weight: 600;
+}
+
+/* 9-Piece Progress Beads */
+.nine-seal-box {
+  margin-top: 9px;
+  padding-top: 8px;
+  border-top: 1px dashed rgba(46, 31, 22, 0.22);
+}
+
+.nine-seal-header {
+  display: flex;
+  justify-content: space-between;
+  font-family: var(--font-ui);
+  font-size: 0.75rem;
+  font-weight: 700;
+  color: var(--ink-mid);
+  margin-bottom: 6px;
+}
+
+.nine-seal-count {
+  color: var(--ren-crimson);
+}
+
+.nine-beads-track {
+  display: grid;
+  grid-template-columns: repeat(9, 1fr);
+  gap: 5px;
+}
+
+.seal-step-bead {
+  height: 10px;
+  border-radius: 999px;
+  background: rgba(46, 31, 22, 0.15);
+  border: 1px solid rgba(46, 31, 22, 0.24);
+  transition: transform 0.22s cubic-bezier(0.34, 1.56, 0.64, 1), background-color 0.2s ease;
+}
+
+.seal-step-bead.human {
+  background: linear-gradient(90deg, #d63826, #f08235);
+  border-color: #8f1d10;
+  transform: scaleY(1.24);
+}
+
+.seal-step-bead.ai {
+  background: linear-gradient(90deg, #16232e, var(--boss-primary));
+  border-color: #0f524a;
+  transform: scaleY(1.24);
+}
+
+.full-board-rule-note {
+  margin-top: 7px;
+  font-size: 0.73rem;
+  color: var(--ink-mid);
+  background: rgba(224, 173, 70, 0.18);
+  padding: 5px 8px;
+  border-radius: 6px;
+  line-height: 1.42;
+}
+
+/* Cumulative Stats Row */
+.session-stats-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 8px;
+}
+
+.session-stat-card {
+  background: var(--bg-night-panel);
+  border: 1px solid var(--border-gold-subtle);
+  border-radius: 9px;
+  padding: 7px 6px;
+  text-align: center;
+}
+
+.session-stat-num {
+  font-family: var(--font-brush);
+  font-size: 1.16rem;
+  color: var(--ren-gold-bright);
+  line-height: 1.1;
+}
+
+.session-stat-label {
+  font-family: var(--font-ui);
+  font-size: 0.69rem;
+  color: var(--txt-secondary);
+}
+
+/* ==========================================================================
+   Right Column: Sacred 3x3 Shrine Arena & Tactical Controls
+   ========================================================================== */
+.arena-board-panel {
+  background: var(--bg-night-panel);
+  border: 1px solid var(--border-gold-subtle);
+  border-radius: 14px;
+  padding: 15px 18px;
+  box-shadow: var(--shadow-anime-panel);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: space-between;
+  gap: 11px;
+  position: relative;
+  overflow: hidden;
+}
+
+.arena-top-bar {
+  width: 100%;
+  max-width: 480px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+  padding: 8px 13px;
+  border-radius: 8px;
+  background: rgba(255, 248, 235, 0.07);
+  border: 1px solid rgba(224, 173, 70, 0.32);
+}
+
+.arena-top-bar.vein-locked-alert {
+  background: rgba(214, 56, 38, 0.24);
+  border-color: var(--ren-gold-bright);
+}
+
+.arena-turn-prompt {
+  font-size: 0.86rem;
+  font-weight: 700;
+  color: var(--txt-bright);
+}
+
+.arena-ai-metrics {
+  font-family: var(--font-ui);
+  font-size: 0.72rem;
+  color: var(--txt-secondary);
+  white-space: nowrap;
+}
+
+/* Hinoki Lacquer Frame & 3x3 Washi Grid */
+.shrine-board-frame {
+  position: relative;
+  width: min(100%, 442px);
+  aspect-ratio: 1 / 1;
+  padding: 15px;
+  border-radius: 14px;
+  background: linear-gradient(135deg, #3c261b 0%, #21150f 50%, #342117 100%);
+  border: 2px solid #a67c37;
+  box-shadow:
+    0 22px 48px rgba(0, 0, 0, 0.7),
+    inset 0 0 0 2px rgba(16, 10, 7, 0.88),
+    inset 0 0 22px rgba(0, 0, 0, 0.58);
+  will-change: transform;
+}
+
+.frame-corner {
+  position: absolute;
+  width: 18px;
+  height: 18px;
+  border: 2px solid var(--ren-gold);
+  pointer-events: none;
+}
+.frame-corner.tl { top: 6px; left: 6px; border-right: 0; border-bottom: 0; }
+.frame-corner.tr { top: 6px; right: 6px; border-left: 0; border-bottom: 0; }
+.frame-corner.bl { bottom: 6px; left: 6px; border-right: 0; border-top: 0; }
+.frame-corner.br { bottom: 6px; right: 6px; border-left: 0; border-top: 0; }
+
+.washi-grid-surface {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  border-radius: 9px;
+  background: radial-gradient(circle at 50% 50%, #fbf3e3 0%, #edd9b8 68%, #ddc196 100%);
+  box-shadow: inset 0 0 28px rgba(88, 54, 24, 0.28);
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  grid-template-rows: repeat(3, 1fr);
+  overflow: hidden;
+}
+
+.magic-circle-watermark {
+  position: absolute;
+  inset: 10%;
+  pointer-events: none;
+  opacity: 0.1;
+  z-index: 1;
+}
+
+.brush-grid-svg {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+  z-index: 2;
+}
+
+.board-vfx-svg {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+  z-index: 12;
+  overflow: visible;
+}
+
+.callout-overlay {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  z-index: 18;
+  overflow: visible;
+}
+
+/* AI Tactical Explanation Strip */
+.ai-commentary-bar {
+  width: 100%;
+  max-width: 480px;
+  padding: 7px 12px;
+  border-radius: 8px;
+  background: rgba(15, 20, 30, 0.78);
+  border: 1px solid rgba(224, 173, 70, 0.22);
+  font-family: var(--font-ui);
+  font-size: 0.76rem;
+  color: var(--txt-secondary);
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.ai-commentary-tag {
+  padding: 2px 6px;
+  border-radius: 4px;
+  background: var(--boss-soft);
+  color: var(--boss-bright);
+  font-weight: 700;
+  flex-shrink: 0;
+}
+
+/* Inline 9th-Move Finale Banner */
+.finale-result-bar {
+  width: 100%;
+  max-width: 480px;
+  display: none;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  padding: 11px 15px;
+  border-radius: 10px;
+  background: linear-gradient(95deg, rgba(44, 24, 18, 0.96) 0%, rgba(24, 18, 22, 0.98) 100%);
+  border: 1.5px solid var(--ren-gold-bright);
+  box-shadow: 0 12px 28px rgba(0, 0, 0, 0.56);
+}
+
+.finale-result-bar.visible {
+  display: flex;
+}
+
+.finale-result-bar.boss-victory {
+  background: linear-gradient(95deg, rgba(16, 34, 38, 0.96) 0%, rgba(19, 24, 33, 0.98) 100%);
+  border-color: var(--boss-bright);
+}
+
+.finale-headline {
+  font-family: var(--font-brush);
+  font-size: 1.08rem;
+  color: var(--ren-gold-bright);
+}
+
+.finale-result-bar.boss-victory .finale-headline {
+  color: var(--boss-bright);
+}
+
+.finale-subtext {
+  font-family: var(--font-ui);
+  font-size: 0.76rem;
+  color: var(--txt-bright);
+  margin-top: 2px;
+}
+
+.finale-btn-group {
+  display: flex;
+  gap: 7px;
+  flex-shrink: 0;
+}
+
+/* Free-Battle Rule & Action Controls */
+.arena-bottom-controls {
+  width: 100%;
+  max-width: 480px;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.rule-variant-pills {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 7px;
+}
+
+.variant-btn {
+  padding: 7px 9px;
+  border-radius: 8px;
+  border: 1px solid rgba(224, 173, 70, 0.26);
+  background: rgba(16, 20, 30, 0.82);
+  color: var(--txt-secondary);
+  text-align: left;
+  cursor: pointer;
+  transition: all 0.16s ease;
+}
+
+.variant-btn:hover {
+  border-color: var(--border-gold-strong);
+  color: var(--txt-bright);
+}
+
+.variant-btn.active {
+  background: linear-gradient(135deg, rgba(214, 56, 38, 0.28), rgba(224, 173, 70, 0.16));
+  border-color: var(--ren-gold-bright);
+  color: var(--txt-bright);
+}
+
+.variant-btn-title {
+  font-family: var(--font-brush);
+  font-size: 0.84rem;
+  display: block;
+}
+
+.variant-btn-sub {
+  font-family: var(--font-ui);
+  font-size: 0.67rem;
+  opacity: 0.85;
+}
+
+.arena-action-buttons {
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+
+.btn-primary-seal {
+  flex: 1;
+  min-width: 135px;
+  padding: 9px 16px;
+  border-radius: 8px;
+  border: 1px solid var(--ren-gold-bright);
+  background: linear-gradient(135deg, #c63121 0%, #8c1e13 100%);
+  color: #fff8ef;
+  font-family: var(--font-brush);
+  font-size: 0.94rem;
+  letter-spacing: 0.05em;
+  cursor: pointer;
+  transition: transform 0.15s ease, filter 0.16s ease;
+}
+
+.btn-primary-seal:hover {
+  filter: brightness(1.1);
+  transform: translateY(-1px);
+}
+
+.btn-secondary-seal {
+  padding: 9px 13px;
+  border-radius: 8px;
+  border: 1px solid var(--border-gold-subtle);
+  background: rgba(20, 25, 38, 0.88);
+  color: var(--txt-bright);
+  font-family: var(--font-ui);
+  font-size: 0.78rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: border-color 0.16s ease, background-color 0.16s ease;
+}
+
+.btn-secondary-seal:hover {
+  border-color: var(--border-gold-strong);
+  background: rgba(224, 173, 70, 0.15);
+}
+
+/* ==========================================================================
+   Codex (#codex-view), Replay (#replay-view) & Achievements (#trophies-view)
+   ========================================================================== */
+.subpage-container {
+  background: var(--bg-night-panel);
+  border: 1px solid var(--border-gold-subtle);
+  border-radius: 14px;
+  padding: 20px 22px;
+  box-shadow: var(--shadow-anime-panel);
+}
+
+.subpage-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  flex-wrap: wrap;
+  padding-bottom: 12px;
+  margin-bottom: 16px;
+  border-bottom: 1px solid rgba(224, 173, 70, 0.25);
+}
+
+.subpage-title {
+  font-family: var(--font-brush);
+  font-size: 1.35rem;
+  color: var(--ren-gold-bright);
+}
+
+.codex-filter-bar {
+  display: flex;
+  gap: 7px;
+  flex-wrap: wrap;
+}
+
+.codex-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+  gap: 14px;
+}
+
+.codex-card {
+  background: rgba(19, 24, 36, 0.92);
+  border: 1px solid rgba(224, 173, 70, 0.26);
+  border-radius: 12px;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+}
+
+.codex-card-art {
+  height: 165px;
+  background: #10141f;
+  position: relative;
+  overflow: hidden;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.codex-card-art img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: center 18%;
+}
+
+.codex-card-art svg {
+  width: 96px;
+  height: 96px;
+}
+
+.codex-card-body {
+  padding: 13px 15px;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.codex-category-tag {
+  font-family: var(--font-ui);
+  font-size: 0.68rem;
+  color: var(--ren-gold-bright);
+  font-weight: 700;
+}
+
+.codex-entry-title {
+  font-family: var(--font-brush);
+  font-size: 1.04rem;
+  color: var(--txt-bright);
+}
+
+.codex-entry-desc {
+  font-size: 0.82rem;
+  color: var(--txt-secondary);
+  line-height: 1.58;
+}
+
+/* Replay Theater Layout */
+.replay-layout {
+  display: grid;
+  grid-template-columns: 300px 1fr;
+  gap: 18px;
+}
+
+.replay-list {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  max-height: 460px;
+  overflow-y: auto;
+}
+
+.replay-item-btn {
+  padding: 10px 12px;
+  border-radius: 9px;
+  border: 1px solid rgba(224, 173, 70, 0.24);
+  background: rgba(16, 20, 30, 0.88);
+  color: var(--txt-secondary);
+  text-align: left;
+  cursor: pointer;
+}
+
+.replay-item-btn.active {
+  border-color: var(--ren-gold-bright);
+  background: rgba(214, 56, 38, 0.22);
+  color: var(--txt-bright);
+}
+
+.replay-stage-box {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 12px;
+  padding: 14px;
+  background: rgba(14, 18, 27, 0.84);
+  border-radius: 12px;
+  border: 1px solid rgba(224, 173, 70, 0.22);
+}
+
+.replay-mini-board {
+  width: 270px;
+  height: 270px;
+  background: var(--bg-scroll-light);
+  border: 3px solid #382318;
+  border-radius: 10px;
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  grid-template-rows: repeat(3, 1fr);
+  gap: 2px;
+  padding: 6px;
+}
+
+.replay-mini-cell {
+  border: 1px solid rgba(56, 35, 24, 0.28);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+  padding: 12%;
+}
+
+.replay-step-controls {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+
+/* Achievements Grid */
+.trophies-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+  gap: 12px;
+}
+
+.trophy-card {
+  display: flex;
+  align-items: flex-start;
+  gap: 11px;
+  padding: 12px 14px;
+  border-radius: 10px;
+  background: rgba(17, 21, 32, 0.88);
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  opacity: 0.58;
+}
+
+.trophy-card.unlocked {
+  opacity: 1;
+  border-color: var(--ren-gold-bright);
+  background: linear-gradient(135deg, rgba(224, 173, 70, 0.16), rgba(18, 23, 35, 0.94));
+}
+
+.trophy-icon {
+  font-size: 1.55rem;
+  line-height: 1;
+}
+
+.trophy-title {
+  font-family: var(--font-brush);
+  font-size: 0.95rem;
+  color: var(--txt-bright);
+}
+
+.trophy-desc {
+  font-family: var(--font-ui);
+  font-size: 0.75rem;
+  color: var(--txt-secondary);
+  margin-top: 2px;
+}
+
+/* ==========================================================================
+   Responsive Breakpoints
+   ========================================================================== */
+@media (max-width: 940px) {
+  .title-gate-card {
+    grid-template-columns: 1fr;
+    padding: 20px;
+  }
+
+  .battle-grid-layout {
+    grid-template-columns: 1fr;
+  }
+
+  .arena-board-panel {
+    order: -1;
+  }
+
+  .replay-layout {
+    grid-template-columns: 1fr;
+  }
+}
+
+@media (max-width: 540px) {
+  .app-shell {
+    padding: 8px 10px 20px;
+  }
+
+  .rule-variant-pills,
+  .chapter-selector-strip {
+    grid-template-columns: 1fr;
+  }
+
+  .shrine-board-frame {
+    padding: 10px;
+  }
+}
+
+/* ==========================================================================
+   對弈畫面：整體遮罩變淺，讓首頁原畫背景看得到；只在棋盤與文字後方局部壓暗
+   ========================================================================== */
+.stage-backdrop::after {
+  background:
+    radial-gradient(ellipse 46% 62% at 50% 52%, rgba(6, 8, 14, 0.62) 0%, rgba(6, 8, 14, 0.38) 60%, rgba(6, 8, 14, 0) 100%),
+    linear-gradient(180deg, rgba(6, 8, 14, 0.45) 0%, rgba(6, 8, 14, 0.08) 22%, rgba(6, 8, 14, 0.08) 78%, rgba(6, 8, 14, 0.5) 100%);
+}
+.stage-backdrop { animation: hw06-bg-drift 38s ease-in-out infinite alternate; }
+@keyframes hw06-bg-drift {
+  from { background-position: 46% 50%; transform: scale(1.04); }
+  to   { background-position: 54% 46%; transform: scale(1.08); }
+}
+body.perf-compat .stage-backdrop { animation: none; }
+.cinematic-dim { background: radial-gradient(circle at center, rgba(6, 8, 12, 0.05) 0%, rgba(5, 6, 10, 0.5) 100%); }
+/* 角色卡：直接看見原畫場景，不再整片壓暗 */
+.tall-rig-viewport {
+  background:
+    linear-gradient(0deg, rgba(7, 9, 15, 0.55) 0%, rgba(7, 9, 15, 0) 45%),
+    url("../assets/bg_fushimi.jpg") 22% center / cover no-repeat;
+}
+.tall-rig-viewport.boss-viewport {
+  background:
+    linear-gradient(0deg, rgba(7, 9, 15, 0.55) 0%, rgba(7, 9, 15, 0) 45%),
+    url("../assets/bg_fushimi.jpg") 78% center / cover no-repeat;
+}

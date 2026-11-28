@@ -1,0 +1,186 @@
+/* Physical tile lift, seal photography, and close-up choreography. */
+.washi-grid-surface.duel-assembling,
+.washi-grid-surface:has(.duel-endgame-slot) {
+  overflow: visible;
+}
+.washi-grid-surface.duel-assembling {
+  background: radial-gradient(circle, #754729 0%, #211410 65%);
+  box-shadow: inset 0 3px 12px #100705;
+}
+.duel-assembling :is(.brush-grid-svg, .magic-circle-watermark) { opacity: 0; }
+.duel-assembling .palace-cell,
+.palace-cell.duel-endgame-slot {
+  border: 2px solid #b57c37;
+  border-radius: 8px;
+  background: radial-gradient(ellipse at 30% 16%, #fff8d0 0, #efd6a3 53%, #ca9871 100%);
+  box-shadow: 0 7px 0 #68361f, 0 10px 11px #1c0c09ba, inset 0 0 0 3px #fff0ac8f;
+}
+.palace-cell.duel-endgame-slot {
+  z-index: 8;
+  transform: translateY(-17px) scale(1.035);
+  animation: duel-slot-lift .34s cubic-bezier(.3,.85,.36,1.35) both;
+}
+@keyframes duel-slot-lift {
+  from { transform: none; }
+  to { transform: translateY(-17px) scale(1.035); }
+}
+.washi-grid-surface:has(.duel-endgame-slot) .palace-cell.occupied .piece-token { opacity: .81; }
+.duel-low-angle {
+  box-shadow: 0 13px 0 #24160f, 0 23px 0 #110c09, 0 40px 65px #000c;
+}
+.duel-low-angle .washi-grid-surface { box-shadow: inset 0 8px 16px #4e2f206e; }
+.duel-low-angle .piece-token { filter: drop-shadow(0 8px 6px #2c180eca); }
+
+.duel-talisman-ember {
+  position: absolute;
+  width: 16px;
+  height: 26px;
+  border-radius: 30% 40% 70% 35%;
+  background: linear-gradient(140deg, #fff4a2, #ff982b 48%, #a6220e 68%, #3c150e);
+  box-shadow: 0 0 9px #ff6720;
+  animation: duel-ember .66s ease-out both;
+}
+@keyframes duel-ember {
+  from { transform: translate(-50%, -50%) rotate(var(--ember-angle)) translateX(21px) scale(.62); }
+  to { transform: translate(-50%, -50%) rotate(var(--ember-angle)) translateX(var(--ember-distance)) rotate(250deg) scale(.3); opacity: 0; }
+}
+.duel-seal-imprint {
+  position: absolute;
+  z-index: 10;
+  inset: 12%;
+  display: grid;
+  place-items: center;
+  border: 3px solid currentColor;
+  border-radius: 13px;
+  color: #a32115;
+  background: #ffe46a73;
+  box-shadow: 0 0 14px #ffb027;
+  text-shadow: 0 0 8px #fff5ab;
+  font: 900 clamp(1.4rem, 6vw, 3.6rem) var(--font-brush, serif);
+  pointer-events: none;
+  animation: duel-imprint 1.54s ease-out both;
+}
+@keyframes duel-imprint {
+  0% { opacity: .25; scale: .74; }
+  18%, 54% { opacity: .96; scale: 1; }
+  to { opacity: 0; scale: 1.045; }
+}
+
+.duel-tail-trap {
+  position: absolute;
+  width: 31%;
+  aspect-ratio: 1;
+  transform: translate(-50%, -50%);
+  isolation: isolate;
+}
+.duel-tail-sector { position: absolute; inset: 0; }
+.duel-tail-sector i {
+  position: absolute;
+  left: 46%;
+  top: 4%;
+  width: 20%;
+  height: 68%;
+  border-radius: 88% 10% 94% 78%;
+  transform-origin: 22% 71%;
+  background: linear-gradient(155deg, #b8fff7, #69ffde 17%, #158a89 63%, #061d26 88%);
+  box-shadow: 0 0 13px #33edcfaa;
+  animation: duel-tail-clamp .80s ease-out var(--tail-delay) both;
+}
+@keyframes duel-tail-clamp {
+  0% { transform: translateY(-35%) rotate(61deg) scale(.72); opacity: 0; }
+  25% { transform: translateY(-23%) rotate(49deg); opacity: .95; }
+  52%, 68% { transform: translateY(9%) rotate(-8deg); opacity: 1; }
+  to { transform: translateY(20%) rotate(-36deg) scale(.65); opacity: 0; }
+}
+.duel-tail-trap b {
+  position: absolute;
+  inset: 20%;
+  display: grid;
+  place-items: center;
+  border-radius: 45%;
+  color: #d0fff7;
+  background: radial-gradient(#073738f2, #061d25ec 54%, #062b2a00 72%);
+  font: 900 clamp(1.25rem, 4vw, 3.5rem) var(--font-brush, serif);
+  animation: duel-ink .70s .10s ease-out both;
+  top: 50%;
+  left: 50%;
+  width: 67%;
+  height: 67%;
+}
+
+.duel-border-clash {
+  position: absolute;
+  width: 30%;
+  height: 20%;
+  transform: translate(-50%, -50%) rotate(var(--clash-angle));
+}
+.duel-border-clash i {
+  position: absolute;
+  top: 46%;
+  width: 51%;
+  height: 21%;
+  left: 0;
+  clip-path: polygon(0 38%, 72% 0, 100% 50%, 72% 100%, 0 64%);
+  background: linear-gradient(90deg, #d0471700, #ffc14a 54%, #fff6ca);
+  animation: duel-clash-left .46s ease-out both;
+}
+.duel-border-clash i:nth-child(2) {
+  left: 49%;
+  clip-path: polygon(100% 38%, 28% 0, 0 50%, 28% 100%, 100% 64%);
+  background: linear-gradient(270deg, #23595f00, #30dbc5 54%, #eefffa);
+  animation-name: duel-clash-right;
+}
+.duel-border-clash b {
+  position: absolute;
+  width: 45%;
+  aspect-ratio: 1;
+  top: 53%;
+  left: 50%;
+  clip-path: polygon(50% 0, 56% 37%, 83% 12%, 70% 45%, 100% 52%, 68% 59%, 84% 89%, 58% 73%, 50% 100%, 41% 66%, 14% 84%, 29% 58%, 0 50%, 31% 43%, 15% 15%, 44% 36%);
+  background: radial-gradient(circle, #fffdec 5%, #ffe994 31%, #79ffe7 68%, transparent);
+  animation: duel-clash-sparks .45s .10s ease-out both;
+}
+@keyframes duel-clash-left {
+  from { transform: translateX(-55%) scaleX(.3); opacity: 0; }
+  36% { transform: translateX(0); opacity: 1; }
+  to { transform: translateX(-23%) scaleX(.42); opacity: 0; }
+}
+@keyframes duel-clash-right {
+  from { transform: translateX(55%) scaleX(.3); opacity: 0; }
+  36% { transform: translateX(0); opacity: 1; }
+  to { transform: translateX(23%) scaleX(.42); opacity: 0; }
+}
+@keyframes duel-clash-sparks {
+  from { transform: translate(-50%, -50%) scale(.22); opacity: 0; }
+  30% { opacity: 1; }
+  to { transform: translate(-59%, -111%) scale(1.5) rotate(24deg); opacity: 0; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .palace-cell.duel-endgame-slot { animation: none; transform: none; }
+  .duel-talisman-ember { display: none; }
+  .duel-seal-imprint { animation: duel-talisman-still 1.5s linear both; }
+  .duel-tail-sector i { animation-name: duel-talisman-still; }
+}
+.duel-border-clash[data-source="ai"] i:first-child { background: linear-gradient(90deg, #23595f00, #30dbc5 54%, #eefffa); }
+.duel-border-clash[data-source="ai"] i:nth-child(2) { background: linear-gradient(270deg, #d0471700, #ffc14a 54%, #fff6ca); }
+.duel-paper-flame {
+  position: absolute;
+  left: 6%;
+  top: 6%;
+  width: 31%;
+  aspect-ratio: .7;
+  border-radius: 72% 33% 63% 45%;
+  background: radial-gradient(ellipse at 40% 68%, #fffab3 1%, #ffe362 25%, #ff7b1a 50%, #9f270f 67%, transparent 72%);
+  animation: duel-paper-corner .42s ease-out calc(.74s + var(--flame-delay)) both;
+}
+.duel-paper-flame:nth-of-type(2) { left: 68%; top: 3%; --flame-angle: 68deg; }
+.duel-paper-flame:nth-of-type(3) { left: 74%; top: 78%; --flame-angle: 129deg; }
+.duel-paper-flame:nth-of-type(4) { left: -3%; top: 78%; --flame-angle: -68deg; }
+@keyframes duel-paper-corner {
+  from { transform: rotate(var(--flame-angle, 0deg)) scale(.4); opacity: 0; }
+  35% { transform: rotate(var(--flame-angle, 0deg)) scale(1.15); opacity: 1; }
+  to { transform: translateY(-35%) rotate(var(--flame-angle, 0deg)) scale(.4); opacity: 0; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .duel-paper-flame { display: none; }
+}

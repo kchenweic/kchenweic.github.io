@@ -1,0 +1,1101 @@
+/* ==========================================================================
+   1142949 HW06 — 京都百鬼夜行：陰陽鎮魂錄
+   File: css/anime-vfx.css
+   Anime Visual Novel Theater, Ultimate Cut-In Banners, Zero-Reflow Spell VFX
+   ========================================================================== */
+
+/* ==========================================================================
+   1. Visual Novel Story Theater Overlay (#vn-theater)
+   ========================================================================== */
+.vn-theater {
+  position: fixed;
+  inset: 0;
+  z-index: 75;
+  display: none;
+  flex-direction: column;
+  justify-content: flex-end;
+  background-color: #090b12;
+  background-size: cover;
+  background-position: center center;
+  overflow: hidden;
+}
+
+.vn-theater.open {
+  display: flex;
+}
+
+.vn-theater::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(180deg, rgba(6, 8, 14, 0.42) 0%, rgba(6, 8, 14, 0.24) 48%, rgba(5, 7, 12, 0.92) 100%);
+  pointer-events: none;
+}
+
+/* Top VN Controls Bar */
+.vn-top-hud {
+  position: absolute;
+  top: 16px;
+  left: 20px;
+  right: 20px;
+  z-index: 8;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  flex-wrap: wrap;
+}
+
+.vn-chapter-banner {
+  padding: 6px 14px;
+  border-radius: 8px;
+  background: rgba(12, 15, 24, 0.85);
+  border: 1px solid var(--border-gold-strong);
+  font-family: var(--font-brush);
+  font-size: 0.96rem;
+  color: var(--ren-gold-bright);
+}
+
+.vn-control-buttons {
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+
+.vn-ctrl-btn {
+  padding: 6px 13px;
+  border-radius: 7px;
+  border: 1px solid rgba(224, 173, 70, 0.38);
+  background: rgba(12, 15, 24, 0.86);
+  color: var(--txt-bright);
+  font-family: var(--font-ui);
+  font-size: 0.78rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.15s ease;
+}
+
+.vn-ctrl-btn:hover {
+  border-color: var(--ren-gold-bright);
+  background: rgba(214, 56, 38, 0.32);
+}
+
+.vn-ctrl-btn.active {
+  background: rgba(22, 168, 154, 0.36);
+  border-color: var(--tamamo-cyan-bright);
+}
+
+.vn-skip-btn {
+  background: linear-gradient(135deg, rgba(214, 56, 38, 0.85), rgba(145, 28, 18, 0.92));
+  border-color: var(--ren-gold-bright);
+}
+
+/* Character Standing Sprites Stage */
+.vn-sprites-stage {
+  position: relative;
+  z-index: 4;
+  width: 100%;
+  max-width: 1180px;
+  margin: 0 auto;
+  flex: 1;
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  padding: 0 36px;
+  pointer-events: none;
+}
+
+.vn-sprite-slot {
+  width: min(42vw, 390px);
+  height: min(68vh, 520px);
+  display: flex;
+  align-items: flex-end;
+  justify-content: center;
+  transition: transform 0.32s cubic-bezier(0.22, 1, 0.36, 1), filter 0.32s ease, opacity 0.32s ease;
+  opacity: 0;
+  transform: translateY(18px) scale(0.95);
+}
+
+.vn-sprite-slot.visible {
+  opacity: 1;
+}
+
+.vn-sprite-slot.dimmed {
+  filter: brightness(0.48) saturate(0.75);
+  transform: translateY(10px) scale(0.94);
+}
+
+.vn-sprite-slot.speaking {
+  filter: brightness(1.05);
+  transform: translateY(0) scale(1.02);
+}
+
+.vn-sprite-frame {
+  width: 100%;
+  height: 100%;
+  border-radius: 18px 18px 0 0;
+  overflow: hidden;
+  border: 2px solid rgba(245, 202, 105, 0.52);
+  border-bottom: none;
+  box-shadow: 0 -8px 36px rgba(0, 0, 0, 0.72);
+  background: #121622;
+}
+
+.vn-sprite-frame img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: center 12%;
+}
+
+/* Interactive Player Branching Choices Overlay inside VN */
+.vn-choices-layer {
+  position: absolute;
+  inset: 0;
+  z-index: 9;
+  display: none;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
+  padding: 24px;
+  background: rgba(6, 8, 14, 0.62);
+}
+
+.vn-choices-layer.open {
+  display: flex;
+}
+
+.vn-choice-prompt {
+  font-family: var(--font-brush);
+  font-size: 1.15rem;
+  color: var(--ren-gold-bright);
+  margin-bottom: 4px;
+}
+
+.vn-choice-btn {
+  max-width: 620px;
+  width: 100%;
+  padding: 13px 20px;
+  border-radius: 10px;
+  border: 1.5px solid var(--border-gold-strong);
+  background: linear-gradient(95deg, rgba(20, 25, 40, 0.95) 0%, rgba(34, 22, 26, 0.95) 100%);
+  color: var(--txt-bright);
+  font-family: var(--font-serif);
+  font-size: 0.95rem;
+  text-align: left;
+  cursor: pointer;
+  box-shadow: 0 10px 28px rgba(0, 0, 0, 0.65);
+  transition: transform 0.16s ease, border-color 0.16s ease, background-color 0.16s ease;
+}
+
+.vn-choice-btn:hover {
+  transform: translateX(6px);
+  border-color: #fff0b3;
+  background: linear-gradient(95deg, rgba(214, 56, 38, 0.42) 0%, rgba(25, 32, 48, 0.96) 100%);
+}
+
+/* Bottom Anime Visual Novel Dialogue Box */
+.vn-dialogue-wrapper {
+  position: relative;
+  z-index: 6;
+  max-width: 1120px;
+  width: calc(100% - 32px);
+  margin: 0 auto 20px;
+  background: linear-gradient(180deg, rgba(14, 18, 28, 0.95) 0%, rgba(9, 11, 18, 0.98) 100%);
+  border: 1.5px solid var(--border-gold-strong);
+  border-radius: 14px;
+  padding: 20px 26px 18px;
+  box-shadow: 0 20px 55px rgba(0, 0, 0, 0.85);
+  cursor: pointer;
+}
+
+.vn-speaker-plate {
+  position: absolute;
+  top: -16px;
+  left: 24px;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 4px 16px;
+  border-radius: 7px;
+  background: linear-gradient(135deg, #c93322 0%, #7d190f 100%);
+  border: 1.5px solid var(--ren-gold-bright);
+  font-family: var(--font-brush);
+  font-size: 1rem;
+  color: #fff8ee;
+  box-shadow: 0 6px 16px rgba(0, 0, 0, 0.5);
+}
+
+.vn-speaker-plate.boss-speaker {
+  background: linear-gradient(135deg, #134e4a 0%, #0f172a 100%);
+  border-color: var(--boss-bright);
+}
+
+.vn-emotion-tag {
+  font-family: var(--font-ui);
+  font-size: 0.72rem;
+  padding: 1px 7px;
+  border-radius: 4px;
+  background: rgba(0, 0, 0, 0.35);
+  color: var(--ren-gold-bright);
+}
+
+.vn-dialogue-text {
+  margin-top: 6px;
+  min-height: 64px;
+  font-size: clamp(0.96rem, 1.4vw, 1.1rem);
+  line-height: 1.72;
+  color: #f7efe2;
+  letter-spacing: 0.02em;
+}
+
+.vn-next-prompt {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-top: 8px;
+  font-family: var(--font-ui);
+  font-size: 0.74rem;
+  color: var(--txt-muted);
+}
+
+.vn-next-arrow {
+  color: var(--ren-gold-bright);
+  font-weight: 700;
+  animation: vnPulseArrow 1s ease-in-out infinite alternate;
+}
+
+@keyframes vnPulseArrow {
+  from { transform: translateX(0); opacity: 0.65; }
+  to { transform: translateX(5px); opacity: 1; }
+}
+
+/* VN Dialogue Backlog Modal */
+.vn-backlog-modal {
+  position: fixed;
+  inset: 0;
+  z-index: 95;
+  display: none;
+  align-items: center;
+  justify-content: center;
+  padding: 20px;
+  background: rgba(5, 7, 12, 0.85);
+}
+
+.vn-backlog-modal.open {
+  display: flex;
+}
+
+.vn-backlog-box {
+  max-width: 720px;
+  width: 100%;
+  max-height: 80vh;
+  background: #121622;
+  border: 1.5px solid var(--border-gold-strong);
+  border-radius: 14px;
+  padding: 20px 24px;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.vn-backlog-entries {
+  overflow-y: auto;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  padding-right: 6px;
+}
+
+.backlog-row {
+  padding: 8px 12px;
+  border-radius: 8px;
+  background: rgba(255, 255, 255, 0.04);
+  border-left: 3px solid var(--ren-gold);
+}
+
+.backlog-speaker {
+  font-family: var(--font-ui);
+  font-size: 0.75rem;
+  font-weight: 700;
+  color: var(--ren-gold-bright);
+}
+
+.backlog-line {
+  font-size: 0.86rem;
+  color: var(--txt-bright);
+  margin-top: 2px;
+}
+
+/* ==========================================================================
+   2. Diagonal Anime Ultimate Cut-In Banner (#anime-cutin)
+   ========================================================================== */
+.anime-cutin-overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 65;
+  pointer-events: none;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+  opacity: 0;
+}
+
+.anime-cutin-overlay.active {
+  animation: cutinLifecycle 1.08s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+
+.cutin-slash-band {
+  position: relative;
+  width: 120vw;
+  height: 168px;
+  transform: rotate(-6deg);
+  background: linear-gradient(90deg, #0b0e17 0%, #8f1d14 28%, #d63826 65%, #0b0e17 100%);
+  border-top: 3px solid var(--ren-gold-bright);
+  border-bottom: 3px solid var(--ren-gold-bright);
+  box-shadow: 0 0 60px rgba(0, 0, 0, 0.9);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 26px;
+  overflow: hidden;
+}
+
+.anime-cutin-overlay.boss-cutin .cutin-slash-band {
+  background: linear-gradient(90deg, #090d14 0%, #103c3a 30%, var(--boss-primary) 68%, #090d14 100%);
+  border-color: var(--boss-bright);
+}
+
+/* Speedlines inside Cut-in Band */
+.cutin-speedlines {
+  position: absolute;
+  inset: 0;
+  opacity: 0.28;
+  background: repeating-linear-gradient(
+    0deg,
+    transparent 0px,
+    transparent 6px,
+    rgba(255, 255, 255, 0.45) 7px,
+    transparent 8px
+  );
+}
+
+.cutin-portrait-crop {
+  width: 210px;
+  height: 210px;
+  border-radius: 50%;
+  overflow: hidden;
+  border: 3px solid #fff5d6;
+  flex-shrink: 0;
+  box-shadow: 0 8px 28px rgba(0, 0, 0, 0.7);
+  z-index: 2;
+}
+
+.cutin-portrait-crop img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: center 16%;
+}
+
+.cutin-text-block {
+  z-index: 2;
+  text-shadow: 0 4px 16px rgba(0, 0, 0, 0.85);
+}
+
+.cutin-sub {
+  font-family: var(--font-ui);
+  font-size: 0.82rem;
+  font-weight: 800;
+  letter-spacing: 0.18em;
+  color: #fff2c2;
+}
+
+.cutin-skill-title {
+  font-family: var(--font-brush);
+  font-size: clamp(1.65rem, 3.6vw, 2.65rem);
+  color: #ffffff;
+  letter-spacing: 0.06em;
+}
+
+@keyframes cutinLifecycle {
+  0% { opacity: 0; transform: scale(1.12); }
+  14% { opacity: 1; transform: scale(1); }
+  78% { opacity: 1; transform: scale(1.01); }
+  100% { opacity: 0; transform: scale(0.96); }
+}
+
+/* ==========================================================================
+   3. Shrine 9-Palace Cells, Non-O/X Seals & Zero-Reflow Impact Animations
+   ========================================================================== */
+.palace-cell {
+  position: relative;
+  z-index: 5;
+  background: transparent;
+  border: none;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 9%;
+  outline: none;
+  transition: background-color 0.16s ease;
+}
+
+.palace-cell:hover:not(:disabled) {
+  background: rgba(214, 56, 38, 0.09);
+}
+
+.palace-cell:focus-visible {
+  box-shadow: inset 0 0 0 3px var(--ren-crimson);
+}
+
+.palace-cell:disabled {
+  cursor: default;
+}
+
+.palace-rune {
+  position: absolute;
+  top: 5px;
+  left: 7px;
+  font-family: var(--font-brush);
+  font-size: 0.7rem;
+  color: rgba(62, 42, 28, 0.46);
+  pointer-events: none;
+}
+
+.move-order-badge {
+  position: absolute;
+  bottom: 4px;
+  right: 7px;
+  font-family: var(--font-ui);
+  font-size: 0.67rem;
+  font-weight: 800;
+  color: rgba(56, 36, 24, 0.58);
+  pointer-events: none;
+}
+
+/* Special Bonus Vein Cell (Dragon Vein / Kurama Wind Gate) */
+.palace-cell.bonus-vein-cell::before {
+  content: attr(data-bonus-label);
+  position: absolute;
+  top: 4px;
+  right: 5px;
+  font-family: var(--font-ui);
+  font-size: 0.62rem;
+  font-weight: 800;
+  padding: 1px 5px;
+  border-radius: 4px;
+  background: linear-gradient(90deg, #b87a14, #f0c259);
+  color: #1d1206;
+  z-index: 8;
+  box-shadow: 0 2px 6px rgba(184, 122, 20, 0.4);
+}
+
+.palace-cell.bonus-vein-cell::after {
+  content: "";
+  position: absolute;
+  inset: 9%;
+  border-radius: 50%;
+  border: 1.8px dashed rgba(196, 134, 24, 0.72);
+  background: radial-gradient(circle, rgba(245, 202, 105, 0.25) 0%, transparent 70%);
+  pointer-events: none;
+  animation: slowSpin 14s linear infinite;
+}
+
+.hover-ghost {
+  position: absolute;
+  width: 68%;
+  height: 68%;
+  opacity: 0;
+  transform: scale(0.8);
+  pointer-events: none;
+  transition: opacity 0.16s ease, transform 0.16s ease;
+}
+
+.palace-cell:not(.occupied):not(:disabled):hover .hover-ghost {
+  opacity: 0.34;
+  transform: scale(0.93);
+}
+
+/* Threat Warning Reticle */
+.threat-reticle {
+  position: absolute;
+  inset: 9%;
+  border-radius: 50%;
+  pointer-events: none;
+  opacity: 0;
+}
+
+.palace-cell.threat-human .threat-reticle {
+  opacity: 1;
+  border: 2px dashed rgba(214, 56, 38, 0.78);
+  animation: reticleSpin 4.6s linear infinite;
+}
+
+.palace-cell.threat-ai .threat-reticle {
+  opacity: 1;
+  border: 2px dashed var(--boss-primary);
+  animation: reticleSpin 3.8s linear infinite reverse;
+}
+
+.palace-cell.threat-both .threat-reticle {
+  opacity: 1;
+  border: 2.5px double #c92828;
+  animation: reticleSpin 2.8s linear infinite;
+}
+
+@keyframes reticleSpin {
+  0% { transform: rotate(0deg) scale(0.95); }
+  50% { transform: rotate(180deg) scale(1.03); }
+  100% { transform: rotate(360deg) scale(0.95); }
+}
+
+@keyframes slowSpin {
+  from { transform: rotate(0deg); }
+  to { transform: rotate(360deg); }
+}
+
+/* Eye of Onmyo Hint Badges */
+.hint-overlay {
+  position: absolute;
+  bottom: 5px;
+  left: 50%;
+  transform: translateX(-50%);
+  padding: 1px 6px;
+  border-radius: 4px;
+  font-family: var(--font-ui);
+  font-size: 0.64rem;
+  font-weight: 700;
+  white-space: nowrap;
+  pointer-events: none;
+  z-index: 9;
+  opacity: 0;
+  transition: opacity 0.16s ease;
+}
+
+body.show-hints .palace-cell:not(.occupied) .hint-overlay {
+  opacity: 1;
+}
+
+.hint-overlay.hint-draw {
+  background: rgba(16, 120, 98, 0.92);
+  color: #ebfffb;
+}
+
+.hint-overlay.hint-lose {
+  background: rgba(176, 38, 28, 0.9);
+  color: #fff1ee;
+}
+
+/* Ink Splat & Piece Sky-Slam + 35ms Hit-Stop */
+.ink-splat-bg {
+  position: absolute;
+  width: 88%;
+  height: 88%;
+  pointer-events: none;
+  opacity: 0;
+  transform: scale(0.42);
+}
+
+.palace-cell.occupied .ink-splat-bg {
+  opacity: 0.25;
+  transform: scale(1);
+  transition: opacity 0.2s ease, transform 0.26s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.piece-mount {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 7;
+}
+
+.piece-token {
+  width: 86%;
+  height: 86%;
+  will-change: transform, opacity;
+  filter: drop-shadow(0 5px 9px rgba(20, 12, 6, 0.34));
+}
+
+body.perf-compat .piece-token {
+  filter: none;
+}
+
+.piece-token.slam-enter {
+  animation: pieceSkySlam 0.44s cubic-bezier(0.2, 0.9, 0.25, 1) forwards;
+}
+
+@keyframes pieceSkySlam {
+  0% {
+    opacity: 0;
+    transform: translate3d(0, -46px, 0) scale(2.32) rotate(-14deg);
+  }
+  42% {
+    opacity: 1;
+    transform: translate3d(0, 2px, 0) scale(0.85) rotate(2deg);
+  }
+  /* 35ms Hit-Stop impact freeze */
+  52% {
+    opacity: 1;
+    transform: translate3d(0, 2px, 0) scale(0.85) rotate(2deg);
+  }
+  76% {
+    transform: translate3d(0, -2px, 0) scale(1.08) rotate(-1deg);
+  }
+  100% {
+    opacity: 1;
+    transform: translate3d(0, 0, 0) scale(1) rotate(0deg);
+  }
+}
+
+.piece-token .seal-spin-ring {
+  transform-origin: 50px 50px;
+  animation: slowSpin 20s linear infinite;
+}
+
+body.perf-compat .piece-token .seal-spin-ring {
+  animation: none;
+}
+
+.palace-cell.in-vein .piece-token {
+  transform: scale(1.06);
+}
+
+/* SVG Shockwaves, Lightning & Grand Slash */
+.svg-shockwave {
+  transform-box: fill-box;
+  transform-origin: center;
+  animation: svgWaveExpand 0.56s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+
+.svg-shockwave.inner {
+  animation-duration: 0.42s;
+}
+
+@keyframes svgWaveExpand {
+  0% { transform: scale(0.18); opacity: 0.96; stroke-width: 5.2px; }
+  100% { transform: scale(1.68); opacity: 0; stroke-width: 0.6px; }
+}
+
+.svg-lightning-bolt {
+  stroke-dasharray: 300;
+  stroke-dashoffset: 300;
+  animation: boltStrike 0.54s ease-out forwards;
+}
+
+@keyframes boltStrike {
+  0% { stroke-dashoffset: 300; opacity: 1; }
+  24% { stroke-dashoffset: 0; opacity: 1; }
+  45% { opacity: 0.3; }
+  66% { opacity: 1; }
+  100% { stroke-dashoffset: 0; opacity: 0; }
+}
+
+.vein-lock-beam {
+  stroke-dasharray: 460;
+  stroke-dashoffset: 460;
+  animation: veinBeamDraw 0.46s cubic-bezier(0.22, 1, 0.36, 1) forwards;
+}
+
+@keyframes veinBeamDraw {
+  to { stroke-dashoffset: 0; }
+}
+
+.finale-slash-stroke {
+  stroke-dasharray: 540;
+  stroke-dashoffset: 540;
+  animation: grandSlashDraw 0.56s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+
+@keyframes grandSlashDraw {
+  0% { stroke-dashoffset: 540; opacity: 0.45; }
+  35% { opacity: 1; }
+  100% { stroke-dashoffset: 0; opacity: 1; }
+}
+
+/* Floating Callouts ("破！", "斬！", "靈脈貫通！") */
+.impact-callout {
+  position: absolute;
+  transform: translate(-50%, -50%) scale(0.3);
+  font-family: var(--font-brush);
+  font-weight: 700;
+  white-space: nowrap;
+  pointer-events: none;
+  animation: calloutBurst 0.94s cubic-bezier(0.18, 1.35, 0.32, 1) forwards;
+}
+
+.impact-callout.counter-stamp {
+  font-size: 2.35rem;
+  color: #fff9ee;
+  background: linear-gradient(135deg, #101d24 0%, var(--boss-primary) 100%);
+  border: 2px solid var(--boss-bright);
+  border-radius: 10px;
+  padding: 2px 14px;
+  box-shadow: 0 10px 26px rgba(0, 0, 0, 0.62);
+}
+
+.impact-callout.vein-stamp {
+  font-size: 1.28rem;
+  color: #fff9ee;
+  background: linear-gradient(90deg, rgba(185, 36, 24, 0.95), rgba(218, 162, 54, 0.95));
+  border: 1.5px solid #ffe49c;
+  border-radius: 999px;
+  padding: 4px 15px;
+  box-shadow: 0 8px 22px rgba(0, 0, 0, 0.5);
+}
+
+.impact-callout.vein-stamp.ai-vein {
+  background: linear-gradient(90deg, rgba(16, 24, 34, 0.96), var(--boss-primary));
+  border-color: var(--boss-bright);
+}
+
+@keyframes calloutBurst {
+  0% { opacity: 0; transform: translate(-50%, -32%) scale(0.28) rotate(-8deg); }
+  22% { opacity: 1; transform: translate(-50%, -56%) scale(1.15) rotate(2deg); }
+  44% { opacity: 1; transform: translate(-50%, -52%) scale(1) rotate(0deg); }
+  82% { opacity: 1; transform: translate(-50%, -64%) scale(1.02); }
+  100% { opacity: 0; transform: translate(-50%, -84%) scale(0.92); }
+}
+
+/* Achievement Unlock Toast */
+.trophy-toast-stack {
+  position: fixed;
+  bottom: 18px;
+  right: 18px;
+  z-index: 98;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  pointer-events: none;
+}
+
+.trophy-toast {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 10px 15px;
+  border-radius: 10px;
+  background: linear-gradient(135deg, rgba(24, 28, 42, 0.96), rgba(44, 28, 18, 0.96));
+  border: 1.5px solid var(--ren-gold-bright);
+  color: var(--txt-bright);
+  box-shadow: 0 12px 30px rgba(0, 0, 0, 0.72);
+  animation: toastSlideIn 3.4s cubic-bezier(0.22, 1, 0.36, 1) forwards;
+}
+
+@keyframes toastSlideIn {
+  0% { opacity: 0; transform: translateX(40px); }
+  12% { opacity: 1; transform: translateX(0); }
+  86% { opacity: 1; transform: translateX(0); }
+  100% { opacity: 0; transform: translateY(-10px); }
+}
+
+/* ==========================================================================
+   下棋的動態與變化（board-dynamics.js）
+   ========================================================================== */
+.palace-cell[data-owner="1"] { --own: 255, 176, 84; }
+.palace-cell[data-owner="-1"] { --own: 73, 242, 225; }
+
+/* 新棋子強烈亮起 → 微弱呼吸 */
+.palace-cell.piece-fresh .piece-token { filter: drop-shadow(0 0 14px rgba(var(--own), 1)) drop-shadow(0 0 4px #fff) brightness(1.25); }
+.palace-cell.piece-breathe .piece-token { animation: pieceBreath 3.2s ease-in-out infinite; }
+@keyframes pieceBreath {
+  0%, 100% { filter: drop-shadow(0 4px 8px rgba(20, 12, 6, 0.3)) drop-shadow(0 0 2px rgba(var(--own), 0.2)); }
+  50% { filter: drop-shadow(0 4px 8px rgba(20, 12, 6, 0.3)) drop-shadow(0 0 9px rgba(var(--own), 0.6)); }
+}
+/* 成為靈脈的一部分時再次甦醒 */
+.palace-cell.piece-awaken .piece-token { animation: pieceAwaken 0.9s ease-out, pieceBreath 3.2s ease-in-out 0.9s infinite; }
+@keyframes pieceAwaken {
+  0% { transform: scale(1); filter: brightness(1) drop-shadow(0 0 0 rgba(var(--own), 0)); }
+  30% { transform: scale(1.16); filter: brightness(1.5) drop-shadow(0 0 18px rgba(var(--own), 1)); }
+  100% { transform: scale(1.06); filter: brightness(1.05) drop-shadow(0 0 8px rgba(var(--own), 0.7)); }
+}
+/* 落子餘波接力 */
+.palace-cell.relay-glow::after {
+  content: ""; position: absolute; inset: 12%; border-radius: 50%; pointer-events: none; z-index: 8;
+  box-shadow: 0 0 0 2px rgba(var(--own), 0.9), 0 0 22px rgba(var(--own), 0.8);
+  animation: relayRing 0.55s ease-out forwards;
+}
+@keyframes relayRing { from { transform: scale(0.7); opacity: 1; } to { transform: scale(1.25); opacity: 0; } }
+
+/* 三種落子力度：普通輕巧、堵線沉穩、得分猛烈 */
+.palace-cell[data-force="block"] .piece-token.slam-enter { animation: pieceHeavy 0.5s cubic-bezier(0.3, 1.4, 0.4, 1) forwards; }
+.palace-cell[data-force="score"] .piece-token.slam-enter,
+.palace-cell[data-force="double"] .piece-token.slam-enter { animation: pieceSmash 0.55s cubic-bezier(0.2, 1.6, 0.3, 1) forwards; }
+@keyframes pieceHeavy {
+  0% { opacity: 0; transform: translateY(-30px) scale(1.5); }
+  45% { opacity: 1; transform: translateY(3px) scale(0.92, 0.86); }
+  70% { transform: translateY(0) scale(1.02); }
+  100% { opacity: 1; transform: none; }
+}
+@keyframes pieceSmash {
+  0% { opacity: 0; transform: translateY(-60px) scale(2.6) rotate(-20deg); }
+  35% { opacity: 1; transform: translateY(4px) scale(0.78) rotate(3deg); }
+  48% { transform: translateY(4px) scale(0.78) rotate(3deg); }
+  70% { transform: translateY(-6px) scale(1.18); }
+  100% { opacity: 1; transform: none; }
+}
+
+/* 首次貫通：棋盤外圈符文亮起 */
+.shrine-board-frame.rune-awake { animation: runeAwake 1.2s ease-out; }
+.shrine-board-frame.rune-awake[data-first-vein="human"] { box-shadow: 0 0 0 2px rgba(255, 176, 84, 0.55), 0 0 30px rgba(255, 140, 60, 0.35), inset 0 0 22px rgba(0, 0, 0, 0.6); }
+.shrine-board-frame.rune-awake[data-first-vein="ai"] { box-shadow: 0 0 0 2px rgba(73, 242, 225, 0.55), 0 0 30px rgba(22, 168, 154, 0.35), inset 0 0 22px rgba(0, 0, 0, 0.6); }
+@keyframes runeAwake { 0% { filter: brightness(1); } 25% { filter: brightness(1.6); } 100% { filter: brightness(1); } }
+.shrine-board-frame .frame-corner { transition: box-shadow 0.4s, transform 0.4s; }
+.shrine-board-frame.rune-awake .frame-corner { box-shadow: 0 0 12px rgba(255, 220, 150, 0.9); }
+
+/* 比分：領先方那一側亮、同分兩側在中央交會 */
+.shrine-board-frame.score-human-lead { background-image: linear-gradient(90deg, rgba(255, 150, 60, 0.18), transparent 45%); }
+.shrine-board-frame.score-ai-lead { background-image: linear-gradient(270deg, rgba(73, 242, 225, 0.18), transparent 45%); }
+.shrine-board-frame.score-tie { background-image: linear-gradient(90deg, rgba(255, 150, 60, 0.14), transparent 40%, transparent 60%, rgba(73, 242, 225, 0.14)); }
+
+/* 末三印升溫：外框符文加速、邊光變強（棋盤中心不受影響） */
+.shrine-board-frame.final-three { animation: finalThree 1.4s ease-in-out infinite; }
+@keyframes finalThree {
+  0%, 100% { box-shadow: 0 0 18px rgba(214, 56, 38, 0.35), 0 0 0 1px rgba(255, 200, 120, 0.35), inset 0 0 22px rgba(0, 0, 0, 0.6); }
+  50% { box-shadow: 0 0 34px rgba(214, 56, 38, 0.6), 0 0 0 2px rgba(255, 220, 150, 0.7), inset 0 0 22px rgba(0, 0, 0, 0.6); }
+}
+.shrine-board-frame.final-three .magic-circle-watermark { animation: slowSpin 14s linear infinite; }
+body.perf-compat .shrine-board-frame.final-three { animation: none; box-shadow: 0 0 0 2px rgba(255, 220, 150, 0.6); }
+
+/* 第九印靜場：背景與粒子放慢 */
+body.ninth-hush .stage-backdrop { animation-play-state: paused; filter: saturate(0.6) brightness(0.8); transition: filter 0.3s; }
+
+/* 九印逐枚清算 */
+.palace-cell.settle-dim .piece-token { opacity: 0.25; filter: grayscale(0.7); transition: opacity 0.25s, filter 0.25s; }
+.palace-cell.settle-lit .piece-token { opacity: 1; animation: settleLit 0.4s ease-out; }
+.palace-cell.settle-lit .move-order-badge { color: #fff; text-shadow: 0 0 6px rgba(var(--own), 1); transform: scale(1.4); transition: transform 0.2s; }
+@keyframes settleLit { 0% { transform: scale(1.3); filter: brightness(1.8) drop-shadow(0 0 16px rgba(var(--own), 1)); } 100% { transform: scale(1); } }
+
+/* 浮字 */
+.bd-callout, .bd-banner {
+  position: fixed; z-index: 82; pointer-events: none; transform: translate(-50%, -50%);
+  font-family: var(--font-brush, serif); font-weight: 900; color: #fff; white-space: nowrap;
+  text-shadow: 0 0 2px #000, 0 2px 6px rgba(0, 0, 0, 0.9);
+}
+.bd-callout { font-size: 1.3rem; animation: bdCallout 1.1s ease-out forwards; }
+.bd-callout.bd-block { color: #ffe2a8; }
+.bd-callout.bd-fork { color: #d7fff9; }
+@keyframes bdCallout { 0% { opacity: 0; transform: translate(-50%, -30%) scale(1.6); } 20% { opacity: 1; transform: translate(-50%, -50%) scale(1); } 75% { opacity: 1; } 100% { opacity: 0; transform: translate(-50%, -90%); } }
+.bd-banner { font-size: 2.4rem; letter-spacing: 0.2em; padding: 6px 28px; animation: bdBanner 1.5s ease-out forwards;
+  background: linear-gradient(90deg, transparent, rgba(8, 10, 16, 0.75), transparent); }
+.bd-banner.bd-human { color: #ffcf7a; }
+.bd-banner.bd-ai { color: #7ff5ea; }
+.bd-banner.bd-tie { color: #f4ead4; }
+@keyframes bdBanner { 0% { opacity: 0; transform: translate(-50%, -50%) scaleX(1.6); } 18% { opacity: 1; transform: translate(-50%, -50%) scaleX(1); } 80% { opacity: 1; } 100% { opacity: 0; } }
+
+/* ==========================================================================
+   介面精簡：招式鏈清單與棋盤規則變化列不顯示（作業只用正統九宮）
+   ========================================================================== */
+.hw06-hidden { display: none !important; }
+
+/* ==========================================================================
+   結尾選單：再戰一回／離開遊戲
+   ========================================================================== */
+.end-choice-overlay {
+  position: fixed; inset: 0; z-index: 95; display: none; align-items: center; justify-content: center;
+  background: radial-gradient(circle at center, rgba(8, 10, 16, 0.55), rgba(4, 5, 9, 0.88));
+}
+.end-choice-overlay.open { display: flex; animation: endFade 0.45s ease-out; }
+@keyframes endFade { from { opacity: 0; } to { opacity: 1; } }
+.end-choice-card {
+  min-width: min(440px, 90vw); padding: 26px 30px; border-radius: 16px; text-align: center;
+  background: linear-gradient(180deg, rgba(28, 20, 16, 0.96), rgba(12, 10, 14, 0.96));
+  border: 1.5px solid rgba(224, 173, 70, 0.6); box-shadow: 0 20px 60px rgba(0, 0, 0, 0.6);
+}
+.end-choice-title { font-family: var(--font-brush, serif); font-size: 1.6rem; color: #ffe2a8; margin-bottom: 6px; }
+.end-choice-detail { font-size: 0.9rem; color: #d8cdb8; margin-bottom: 20px; line-height: 1.6; }
+.end-choice-btns { display: flex; gap: 14px; justify-content: center; }
+.end-choice-btns button { font-size: 1.05rem; padding: 10px 22px; min-width: 140px; }
+
+/* ==========================================================================
+   棋子飛行／靈脈光柱／九印升空
+   ========================================================================== */
+.seal-rise-layer { position: fixed; inset: 0; z-index: 83; pointer-events: none; }
+.seal-rise-token { position: fixed; display: flex; align-items: center; justify-content: center; will-change: transform; }
+.seal-rise-token .piece-token { width: 86%; height: 86%; filter: drop-shadow(0 0 14px rgba(255, 230, 170, 0.8)); }
+.palace-cell.seal-risen .piece-token { opacity: 0.12; transition: opacity 0.3s; }
+.stage-backdrop.vein-flash-human { filter: brightness(1.55) sepia(0.35) saturate(1.5); transition: filter 0.15s; }
+.stage-backdrop.vein-flash-ai { filter: brightness(1.45) hue-rotate(-25deg) saturate(1.5); transition: filter 0.15s; }
+.finale-struck { animation: finaleStruck 0.8s cubic-bezier(.3,1.5,.5,1); }
+@keyframes finaleStruck {
+  0% { transform: translateX(0); filter: brightness(1); }
+  15% { transform: translateX(-14px) rotate(-1.5deg); filter: brightness(2.2); }
+  35% { transform: translateX(10px) rotate(1deg); filter: brightness(1.4); }
+  60% { transform: translateX(-5px); }
+  100% { transform: none; filter: none; }
+}
+
+/* 反制時棋盤破裂 */
+.shrine-board-frame.board-shatter { animation: boardShatter 0.5s cubic-bezier(.3,1.6,.5,1); }
+@keyframes boardShatter {
+  0% { transform: none; filter: brightness(1); }
+  15% { transform: translate(-6px, 3px) rotate(-0.6deg); filter: brightness(1.5) hue-rotate(-15deg); }
+  40% { transform: translate(5px, -2px) rotate(0.4deg); }
+  100% { transform: none; filter: none; }
+}
+
+/* Board choreography */
+.shrine-board-frame[data-turn-glow="human"] { --duel-accent: #ffce65; }
+.shrine-board-frame[data-turn-glow="ai"] { --duel-accent: #68eee1; }
+.shrine-board-frame[data-turn-glow="draw"] { --duel-accent: #f4e4ff; }
+.shrine-board-frame[data-turn-glow] .frame-corner {
+  border-color: var(--duel-accent);
+  filter: drop-shadow(0 0 6px var(--duel-accent));
+  transition: border-color .25s;
+}
+.washi-grid-surface.board-locked .palace-cell { cursor: default; }
+.washi-grid-surface:not(.board-locked) .palace-cell:not(.occupied):is(:hover, :focus-visible) .piece-mount::after {
+  content: "✦";
+  position: absolute;
+  inset: 12%;
+  display: grid;
+  place-items: center;
+  color: rgba(151, 63, 16, .52);
+  font-size: clamp(1.25rem, 4vw, 3rem);
+  border: 2px dashed currentColor;
+  border-radius: 50%;
+}
+.duel-overlay {
+  position: absolute;
+  inset: 15px;
+  overflow: visible;
+  z-index: 15;
+  pointer-events: none;
+}
+.duel-cell-ripple {
+  position: absolute;
+  inset: 4px;
+  border: 3px solid #fff1ac;
+  border-radius: 6px;
+  box-shadow: inset 0 0 12px currentColor;
+  color: #ad460e;
+  opacity: 0;
+  pointer-events: none;
+  animation: duel-ripple .36s ease-out both;
+}
+.duel-cell-ripple.ai { border-color: #e6fffc; color: #007969; }
+@keyframes duel-ripple {
+  22% { opacity: .9; transform: scale(.94); }
+  100% { opacity: 0; transform: scale(1.04); }
+}
+.duel-talisman-impact, .duel-ink, .duel-fork-target {
+  position: absolute;
+  width: 23%;
+  aspect-ratio: 1;
+  border-radius: 50%;
+  transform: translate(-50%, -50%);
+}
+.duel-talisman-impact {
+  border: 5px solid #fff6a7;
+  box-shadow: 0 0 20px #ffd02b, inset 0 0 23px #fabc15;
+  animation: duel-impact .48s ease-out both;
+}
+@keyframes duel-impact {
+  from { transform: translate(-50%, -50%) scale(.4); }
+  to { transform: translate(-50%, -50%) scale(2.15); opacity: 0; }
+}
+.duel-ink {
+  display: grid;
+  place-items: center;
+  font: 900 clamp(1.5rem, 4vw, 3.5rem) var(--font-brush, serif);
+  color: #c7fff6;
+  border: 3px dashed #8be7da;
+  background: radial-gradient(#073b3deb 42%, #061c25dc 65%, #061c2500 73%);
+  animation: duel-ink .74s ease-out both;
+}
+@keyframes duel-ink {
+  from { transform: translate(-50%, -50%) scale(.1) rotate(30deg); }
+  28%, 65% { transform: translate(-50%, -50%) scale(1); opacity: 1; }
+  to { opacity: 0; transform: translate(-50%, -50%) scale(1.14); }
+}
+.duel-fork-target {
+  display: grid;
+  place-items: center;
+  width: 17%;
+  color: #561800;
+  background: #ffe48aee;
+  border: 3px dashed #a64116;
+  box-shadow: 0 0 13px #f9af23;
+  font-weight: 900;
+  animation: duel-ink 1s ease-out both;
+}
+.duel-fork-target.ai { color: #003b3d; background: #abf5edee; border-color: #087761; box-shadow: 0 0 13px #6ceedd; }
+.duel-dual-threat::before, .duel-thinking::after {
+  content: "";
+  position: absolute;
+  pointer-events: none;
+}
+.duel-dual-threat::before {
+  inset: -9%;
+  border: 3px dashed #f8d37b;
+  border-radius: 50%;
+  box-shadow: 0 0 20px #e3a23499, inset 0 0 18px #4accbd88;
+  animation: duel-orbit 7s linear infinite;
+}
+@keyframes duel-orbit { to { rotate: 360deg; } }
+.duel-thinking::after {
+  inset: -4px;
+  border-radius: 16px;
+  border: 3px solid #52ddca;
+  box-shadow: 0 0 18px #4df2cf;
+  animation: duel-think .55s ease-in-out infinite alternate;
+}
+@keyframes duel-think {
+  from { clip-path: inset(0 66% 0 0); }
+  to { clip-path: inset(0 0 0 60%); }
+}
+.palace-cell.duel-endgame-slot { box-shadow: inset 0 0 22px 4px #ffda67; }
+.palace-cell.duel-last::after {
+  content: "";
+  position: absolute;
+  inset: 6px;
+  border: 2px dashed #7d4309;
+  border-radius: 8px;
+  pointer-events: none;
+}
+.palace-cell.duel-invalid { animation: duel-invalid .26s ease-out; }
+@keyframes duel-invalid {
+  25% { background: #f6aaa3; translate: -4px 0; }
+  55% { translate: 4px 0; }
+}
+.palace-cell.duel-draw-scan { animation: duel-scan .46s ease-out var(--scan-delay) both; }
+@keyframes duel-scan {
+  50% { box-shadow: inset 0 0 20px 5px #ac8bd6; background: #f1d7ff; }
+}
+body[data-duel-result="ai"] #hero-fighter-card,
+body[data-duel-result="human"] #boss-fighter-card { filter: saturate(.65) brightness(.75); }
+body[data-duel-result="ai"] #boss-fighter-card { box-shadow: 0 0 27px #22af9e70; }
+body[data-duel-result="human"] #hero-fighter-card { box-shadow: 0 0 27px #ffd96580; }
+.finale-btn-group { display: none; }
+.epilogue-done .finale-btn-group { display: flex; gap: 6px; flex-wrap: wrap; }
+@media (prefers-reduced-motion: reduce) {
+  .duel-dual-threat::before, .duel-thinking::after { animation: none; }
+  @keyframes duel-talisman-still {
+    0%, 80% { opacity: 1; }
+    to { opacity: 0; }
+  }
+}
+.duel-corner-flare {
+  position: absolute;
+  width: 12%;
+  aspect-ratio: 1;
+  background: conic-gradient(from 45deg, transparent, #ffe995 14%, transparent 25%, #fff6c7 38%, transparent 50%, #ffe995 64%, transparent 75%, #fff6c7 88%, transparent);
+  border: 1px solid #ad5c15;
+  border-radius: 50%;
+  opacity: 0;
+  animation: duel-corner .50s ease-out both;
+}
+@keyframes duel-corner {
+  from { transform: translate(-50%, -50%) scale(.4); }
+  25% { opacity: .95; }
+  to { transform: translate(-50%, -50%) scale(1.6); opacity: 0; }
+}
+@media (max-width: 540px) {
+  .duel-overlay { inset: 10px; }
+  .epilogue-done .finale-btn-group { justify-content: flex-start; }
+}
