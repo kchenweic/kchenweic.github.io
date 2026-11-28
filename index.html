@@ -1,0 +1,576 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>1142949 HW06 — 京都百鬼夜行：陰陽鎮魂對弈 (Tic-Tac-Toe)</title>
+  <meta name="description" content="1142949 HW06 日本動漫風井字棋 Web 版：可動 2D 骨骼角色動畫、男女角色配音、和風 BGM、旋轉棋盤、飛棋、黃符封格、九印滿盤結算與電腦後手不敗 AI。" />
+  <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Ccircle cx='32' cy='32' r='30' fill='%2310131d' stroke='%23e0ad46' stroke-width='3'/%3E%3Cpolygon points='32,8 46,52 9,25 55,25 18,52' fill='none' stroke='%23f2523d' stroke-width='4' stroke-linejoin='round'/%3E%3C/svg%3E" />
+  <link rel="stylesheet" href="./css/anime-theme.css" />
+  <link rel="stylesheet" href="./css/anime-vfx.css" />
+  <link rel="stylesheet" href="./css/anime-cinema.css" />
+  <link rel="stylesheet" href="./css/duel-spectacle.css" />
+  <link rel="stylesheet" href="./css/cosmic-battle.css" />
+</head>
+<body class="perf-high" data-stage="fushimi" data-boss="tamamo">
+  <!-- ========================================================================
+       Custom Non-O/X Anime Faction SVG Seals (Onmyoji Pentagram vs Kitsune Mask)
+       ======================================================================== -->
+  <svg width="0" height="0" style="position:absolute;overflow:hidden" aria-hidden="true">
+    <defs>
+      <symbol id="ink-splat" viewBox="0 0 100 100">
+        <path d="M50 9 C65 7, 81 15, 88 29 C95 43, 92 63, 82 76 C72 89, 55 93, 39 90 C23 87, 11 75, 9 58 C7 41, 14 23, 29 14 C36 10, 43 10, 50 9 Z" fill="currentColor" />
+        <circle cx="14" cy="19" r="3.6" fill="currentColor" />
+        <circle cx="89" cy="21" r="2.8" fill="currentColor" />
+        <circle cx="87" cy="83" r="4.1" fill="currentColor" />
+        <circle cx="15" cy="82" r="3.0" fill="currentColor" />
+      </symbol>
+
+      <linearGradient id="seal-gold" x1="0" x2=".8" y1="0" y2="1" gradientUnits="objectBoundingBox">
+        <stop stop-color="#fff5b3" />
+        <stop offset=".29" stop-color="#ffcb58" />
+        <stop offset=".52" stop-color="#cf5918" />
+        <stop offset=".73" stop-color="#ffd05d" />
+        <stop offset="1" stop-color="#bc4026" />
+      </linearGradient>
+      <linearGradient id="seal-jade" x1="0" x2=".7" y1="0" y2="1" gradientUnits="objectBoundingBox">
+        <stop stop-color="#ecfff3" />
+        <stop offset=".55" stop-color="#a9e8dc" />
+        <stop offset="1" stop-color="#3b919e" />
+      </linearGradient>
+
+      <!-- Forged pentagram -->
+      <symbol id="seal-ren" viewBox="0 0 100 100">
+        <path d="M50 6 62 34 92 38 70 58 76 89 50 74 24 89 30 58 8 38 38 34Z" transform="translate(0 6)" fill="#6c2317" stroke="#4e2319" stroke-width="3" stroke-linejoin="round" />
+        <path d="M50 6 62 34 92 38 70 58 76 89 50 74 24 89 30 58 8 38 38 34Z" fill="url(#seal-gold)" stroke="#fbe09a" stroke-width="2.7" stroke-linejoin="round" />
+        <path d="M50 16 69 77 18 42 82 42 31 77Z" fill="#af311b52" stroke="#9c2a16" stroke-width="5.4" stroke-linejoin="round" />
+        <path d="M50 16 69 77 18 42 82 42 31 77Z" fill="none" stroke="#fff393" stroke-width="2.2" stroke-linejoin="round" />
+        <path d="M50 42 58 52 50 62 42 52Z" fill="#b53427" stroke="#ffe39b" stroke-width="1.5" />
+        <path d="M50 46 54 52 50 57 46 52Z" fill="#fff6d5" />
+      </symbol>
+
+      <!-- Mask inlaid into blue jade -->
+      <symbol id="seal-tamamo" viewBox="0 0 100 100">
+        <path d="M20 41 13 8 38 22 Q50 13 62 22 L87 8 80 41 Q87 64 64 80 L50 93 36 80 Q13 64 20 41Z" transform="translate(0 4)" fill="#08232b" stroke="#051c26" stroke-width="4" stroke-linejoin="round" />
+        <path d="M20 41 13 8 38 22 Q50 13 62 22 L87 8 80 41 Q87 64 64 80 L50 93 36 80 Q13 64 20 41Z" fill="#175f6f" stroke="#65f6de" stroke-width="3.1" stroke-linejoin="round" />
+        <path d="M27 42 22 19 39 30 Q50 23 61 30 L78 19 73 42 Q79 59 61 73 L50 83 39 73 Q21 59 27 42Z" fill="url(#seal-jade)" stroke="#15465d" stroke-width="1.5" />
+        <path d="M28 33 28 25 38 32 M72 33 72 25 62 32 M50 31 54 39 50 45 46 39Z" fill="#c2374e" />
+        <path d="M31 48 Q39 43 46 51 Q38 55 31 48 M69 48 Q61 43 54 51 Q62 55 69 48Z" fill="#132c3d" />
+        <path d="M37 49H42 M58 49H63" fill="none" stroke="#56fff0" stroke-width="2.4" stroke-linecap="round" />
+        <path d="M29 56q4 6 12 7 M33 65q4 4 9 5 M38 73l5 3 M71 56q-4 6-12 7 M67 65q-4 4-9 5 M62 73l-5 3 M46 70l4 4 4-4" fill="none" stroke="#b82949" stroke-width="2.4" stroke-linecap="round" />
+      </symbol>
+    </defs>
+  </svg>
+
+  <!-- Full-Bleed Kyoto Fushimi Night Backdrop + Weather & Spell Canvases -->
+  <div id="stage-backdrop" class="stage-backdrop" aria-hidden="true"></div>
+  <canvas id="fx-canvas" aria-hidden="true"></canvas>
+  <canvas id="spell-canvas" aria-hidden="true"></canvas>
+  <canvas id="arena-effects-canvas" aria-hidden="true"></canvas>
+  <div id="cinematic-dim" class="cinematic-dim" aria-hidden="true"></div>
+
+  <!-- ========================================================================
+       Anime Opening Gate (#title-gate)
+       ======================================================================== -->
+  <section id="title-gate" class="title-gate" aria-label="遊戲開場畫面">
+    <div class="title-gate-card">
+      <div>
+        <span class="title-gate-eyebrow">1142949 HW06 · 陳辰瑋</span>
+        <h2 class="title-gate-heading">京都百鬼夜行：陰陽鎮魂對弈</h2>
+        <p class="title-gate-sub">
+          丑時三刻，血月高懸伏見千本鳥居！化身晴明傳人<strong>「神樂坂 蓮」</strong>，與千年大妖<strong>「九尾妖狐・玉藻前」</strong>展開九宮靈脈對決。全作搭載<strong>可動 2D 骨骼動漫角色</strong>、<strong>專屬男女角色語音與嘴型同步</strong>、<strong>9 手不重複必殺彈道法陣特效</strong>與<strong>精煉運鏡劇情動畫</strong>！
+        </p>
+
+        <div class="title-feature-badges">
+          <span class="title-badge">🎙️ 角色專屬聲線配音＋嘴型同步</span>
+          <span class="title-badge">🎬 可動骨骼角色＆精煉運鏡開場/結局動畫</span>
+          <span class="title-badge">🔥 飛棋、旋轉棋盤與黃符封格</span>
+          <span class="title-badge">⚖️ 九印落滿才結算・電腦後手不敗</span>
+        </div>
+
+        <div class="title-cta-group">
+          <button type="button" id="btn-start-story" class="btn-anime-hero">
+            <span>▶ 開始《伏見血月》</span>
+          </button>
+        </div>
+      </div>
+
+      <div class="title-cast-showcase" aria-hidden="true" style="grid-template-columns:1fr 1fr;">
+        <div class="cast-thumb-card" style="height:290px;">
+          <img src="./assets/char_ren.jpg" alt="神樂坂 蓮" />
+          <div class="cast-thumb-caption">
+            <span>神樂坂 蓮</span>
+            <span class="cast-thumb-role">玩家先手・5 印</span>
+          </div>
+        </div>
+        <div class="cast-thumb-card" style="height:290px;">
+          <img src="./assets/char_tamamo.jpg" alt="九尾妖狐・玉藻前" />
+          <div class="cast-thumb-caption">
+            <span>玉藻前</span>
+            <span class="cast-thumb-role">電腦後手・不敗</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ========================================================================
+       Focused Single-Stage Application Shell
+       ======================================================================== -->
+  <div class="app-shell" inert>
+    <!-- Top Header with Student ID + HW06 -->
+    <header class="anime-hud-header">
+      <div class="hud-brand">
+        <div class="hanko-seal" aria-hidden="true">
+          <span>百鬼</span>
+          <span>鎮魂</span>
+        </div>
+        <div class="hud-title-wrap">
+          <h1 id="main-title">1142949 HW06 · 京都百鬼夜行：陰陽鎮魂對弈</h1>
+          <div class="hud-subtitle">
+            <span class="rank-pill">伏見千本鳥居決戰</span>
+            <span>電腦後手不敗 AI · 九印落滿才結算</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="hud-nav-tabs">
+        <button type="button" class="nav-tab-btn" id="btn-replay-opening">🎬 播放開場劇情動畫</button>
+        <button type="button" class="nav-tab-btn" id="btn-open-rules">📜 規則與變化說明</button>
+      </div>
+    </header>
+
+    <!-- Live BGM, Voice & Auto-Performance Guard Bar -->
+    <section class="hud-utility-bar" aria-label="音樂語音與畫質護航控制列">
+      <div class="bgm-studio-cluster">
+        <button type="button" id="btn-bgm-toggle" class="chip-btn" aria-pressed="true" title="開關和風動漫背景音樂">
+          <span id="bgm-toggle-label">🎵 BGM 演奏中</span>
+        </button>
+
+        <div id="bgm-eq-bars" class="bgm-eq-bars" aria-hidden="true">
+          <span class="eq-bar"></span>
+          <span class="eq-bar"></span>
+          <span class="eq-bar"></span>
+          <span class="eq-bar"></span>
+          <span class="eq-bar"></span>
+          <span class="eq-bar"></span>
+          <span class="eq-bar"></span>
+          <span class="eq-bar"></span>
+        </div>
+
+        <select id="bgm-track-select" class="bgm-select" aria-label="選擇背景音樂曲目">
+          <option value="auto">自動隨戰況升階 BGM</option>
+          <option value="moonlight">Ⅰ. 月下千本鳥居（箏・尺八）</option>
+          <option value="shrine_duel">Ⅱ. 陰陽九宮陣（三味線・太鼓）</option>
+          <option value="yokai_storm">Ⅲ. 百鬼狂瀾破陣曲（後半盤激戰）</option>
+          <option value="eternal_seal">Ⅳ. 陰陽鎮魂歌（終局雅樂）</option>
+        </select>
+
+        <input id="bgm-volume" type="range" min="0" max="100" value="68" class="bgm-vol-slider" aria-label="BGM 音量調整" />
+
+        <button type="button" id="btn-sfx-toggle" class="chip-btn" aria-pressed="true">
+          <span id="sfx-toggle-label">🔊 音效開啟</span>
+        </button>
+
+        <button type="button" id="btn-voice-toggle" class="chip-btn" aria-pressed="true">
+          <span id="voice-toggle-label">🎙️ 角色語音開啟</span>
+        </button>
+      </div>
+
+      <div class="util-chip-group">
+        <button type="button" id="btn-hint-toggle" class="chip-btn" aria-pressed="false" title="顯示 Minimax 即時推演評分">
+          <span>👁️ 陰陽天眼</span>
+        </button>
+        <button type="button" id="btn-perf-mode" class="chip-btn" title="點擊可測試切換畫質模式（預設依實際 FPS 自動調整）">
+          <span class="perf-indicator-dot" aria-hidden="true"></span>
+          <span id="perf-label">自動護航：極致動畫</span>
+        </button>
+      </div>
+    </section>
+
+    <!-- ======================================================================
+         MAIN 3-COLUMN SINGLE-STAGE DUEL ARENA
+         [Left: Live Animated Onmyoji] ⇄ [Center: 3x3 Board] ⇄ [Right: Live Animated Kitsune]
+         ====================================================================== -->
+    <main class="single-stage-arena" aria-label="伏見鳥居九宮演武舞台">
+      <!-- LEFT WING: PLAYER PROTAGONIST (神樂坂 蓮 — 先手 5 印) -->
+      <aside class="duelist-wing" aria-label="玩家先手角色舞台">
+        <div id="hero-fighter-card" class="tall-rig-viewport hero-viewport active-turn">
+          <canvas id="hero-rig-canvas" class="rig-canvas" width="280" height="330" aria-label="可動骨骼角色：神樂坂 蓮"></canvas>
+          <div class="voice-live-pill">
+            <span class="voice-wave-dot"></span>
+            <span class="voice-wave-dot"></span>
+            <span class="voice-wave-dot"></span>
+            <span>蓮・詠唱中</span>
+          </div>
+          <svg class="fighter-seal-mini" viewBox="0 0 100 100" aria-hidden="true" style="width:36px;height:36px;">
+            <use href="#seal-ren" />
+          </svg>
+          <div class="wing-footer-overlay">
+            <div>
+              <div class="wing-role-label">玩家先手 · 晴明五芒星御守</div>
+              <div class="wing-char-name">神樂坂 蓮</div>
+            </div>
+            <div class="wing-vein-counter">
+              <span id="human-vein-score" class="wing-vein-num">0</span>
+              <span class="wing-vein-unit">道靈脈</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Player 5-Move Escalating Spell Arsenal（介面精簡：不顯示） -->
+        <div class="spell-chain-card hw06-hidden">
+          <div class="spell-chain-title">
+            <span>🔥 先手五印・陰陽演武招式鏈</span>
+            <span>5 招遞進</span>
+          </div>
+          <div id="hero-spell-list" class="spell-step-list">
+            <div class="spell-step-item next-up" data-hero-slot="0"><span>第 1 印 · 桔梗五芒初陣</span><span>靈符</span></div>
+            <div class="spell-step-item" data-hero-slot="1"><span>第 3 印 · 朱雀雙炎翔翼</span><span>雙鳳</span></div>
+            <div class="spell-step-item" data-hero-slot="2"><span>第 5 印 · 金剛八門鎖陣</span><span>鎖鏈</span></div>
+            <div class="spell-step-item" data-hero-slot="3"><span>第 7 印 · 北斗七星天墜</span><span>星隕</span></div>
+            <div class="spell-step-item" data-hero-slot="4"><span>第 9 印 · 太極萬象鎮魂陣</span><span>奧義</span></div>
+          </div>
+        </div>
+
+        <!-- Elemental Spell Palette Variation -->
+        <div class="spell-chain-card">
+          <div class="spell-chain-title">
+            <span>✦ 靈符屬性特效變化（隨時切換）</span>
+          </div>
+          <div class="element-style-row" role="group" aria-label="切換靈符屬性特效">
+            <button type="button" class="elem-pill-btn active" data-elem="suzaku">🔥 朱雀炎</button>
+            <button type="button" class="elem-pill-btn" data-elem="byakko">⚡ 白虎雷</button>
+            <button type="button" class="elem-pill-btn" data-elem="seiryu">🌊 青龍水</button>
+            <button type="button" class="elem-pill-btn" data-elem="genbu">✨ 玄武星</button>
+          </div>
+        </div>
+      </aside>
+
+      <!-- CENTER STAGE: SACRED 3x3 NINE-PALACE SHRINE BOARD -->
+      <section class="center-board-stage" aria-label="九宮結界棋盤區">
+        <div id="spell-tech-ribbon" class="spell-tech-ribbon" aria-hidden="true">
+          第 1 印 ·《式神招來・桔梗五芒初陣》
+        </div>
+
+        <div id="turn-banner" class="arena-top-bar" style="max-width:100%;">
+          <div id="turn-status-text" class="arena-turn-prompt" aria-live="polite">
+            🔴 請落第 1 印：點擊九宮格施放「桔梗五芒初陣」
+          </div>
+          <div id="ai-telemetry" class="arena-ai-metrics">Minimax · 電腦後手</div>
+        </div>
+
+        <!-- Hinoki Framed 3x3 Washi Magic Board -->
+        <div id="board-scroll-frame" class="shrine-board-frame">
+          <span class="frame-corner tl" aria-hidden="true"></span>
+          <span class="frame-corner tr" aria-hidden="true"></span>
+          <span class="frame-corner bl" aria-hidden="true"></span>
+          <span class="frame-corner br" aria-hidden="true"></span>
+
+          <div id="washi-board" class="washi-grid-surface" role="group" aria-label="九宮靈脈棋盤">
+            <svg class="magic-circle-watermark" viewBox="0 0 200 200" aria-hidden="true">
+              <circle cx="100" cy="100" r="90" fill="none" stroke="#3b2516" stroke-width="2.8" />
+              <circle cx="100" cy="100" r="70" fill="none" stroke="#3b2516" stroke-width="1.5" stroke-dasharray="6 4" />
+              <polygon points="100,18 154,164 22,72 178,72 46,164" fill="none" stroke="#3b2516" stroke-width="2.2" />
+            </svg>
+
+            <svg class="brush-grid-svg" viewBox="0 0 300 300" preserveAspectRatio="none" aria-hidden="true">
+              <path d="M100,10 Q101.5,150 99,290" stroke="#2d1d13" stroke-width="4.2" stroke-linecap="round" opacity="0.84" />
+              <path d="M200,10 Q198.5,150 201,290" stroke="#2d1d13" stroke-width="4.2" stroke-linecap="round" opacity="0.84" />
+              <path d="M10,100 Q150,98.5 290,101" stroke="#2d1d13" stroke-width="4.2" stroke-linecap="round" opacity="0.84" />
+              <path d="M10,200 Q150,201.5 290,199" stroke="#2d1d13" stroke-width="4.2" stroke-linecap="round" opacity="0.84" />
+            </svg>
+
+            <!-- 9 Shrine Palaces -->
+            <button type="button" class="palace-cell" id="cell-0" data-index="0" aria-label="巽四宮（左上）">
+              <span class="palace-rune">巽四</span>
+              <span class="threat-reticle"></span>
+              <svg class="hover-ghost" viewBox="0 0 100 100" aria-hidden="true"><use href="#seal-ren" /></svg>
+              <svg class="ink-splat-bg" viewBox="0 0 100 100" aria-hidden="true"><use href="#ink-splat" /></svg>
+              <span class="piece-mount"></span>
+              <span class="hint-overlay"></span>
+              <span class="move-order-badge"></span>
+            </button>
+
+            <button type="button" class="palace-cell" id="cell-1" data-index="1" aria-label="離九宮（中上）">
+              <span class="palace-rune">離九</span>
+              <span class="threat-reticle"></span>
+              <svg class="hover-ghost" viewBox="0 0 100 100" aria-hidden="true"><use href="#seal-ren" /></svg>
+              <svg class="ink-splat-bg" viewBox="0 0 100 100" aria-hidden="true"><use href="#ink-splat" /></svg>
+              <span class="piece-mount"></span>
+              <span class="hint-overlay"></span>
+              <span class="move-order-badge"></span>
+            </button>
+
+            <button type="button" class="palace-cell" id="cell-2" data-index="2" aria-label="坤二宮（右上）">
+              <span class="palace-rune">坤二</span>
+              <span class="threat-reticle"></span>
+              <svg class="hover-ghost" viewBox="0 0 100 100" aria-hidden="true"><use href="#seal-ren" /></svg>
+              <svg class="ink-splat-bg" viewBox="0 0 100 100" aria-hidden="true"><use href="#ink-splat" /></svg>
+              <span class="piece-mount"></span>
+              <span class="hint-overlay"></span>
+              <span class="move-order-badge"></span>
+            </button>
+
+            <button type="button" class="palace-cell" id="cell-3" data-index="3" aria-label="震三宮（左中）">
+              <span class="palace-rune">震三</span>
+              <span class="threat-reticle"></span>
+              <svg class="hover-ghost" viewBox="0 0 100 100" aria-hidden="true"><use href="#seal-ren" /></svg>
+              <svg class="ink-splat-bg" viewBox="0 0 100 100" aria-hidden="true"><use href="#ink-splat" /></svg>
+              <span class="piece-mount"></span>
+              <span class="hint-overlay"></span>
+              <span class="move-order-badge"></span>
+            </button>
+
+            <button type="button" class="palace-cell" id="cell-4" data-index="4" aria-label="中宮五（正中）">
+              <span class="palace-rune">中宮</span>
+              <span class="threat-reticle"></span>
+              <svg class="hover-ghost" viewBox="0 0 100 100" aria-hidden="true"><use href="#seal-ren" /></svg>
+              <svg class="ink-splat-bg" viewBox="0 0 100 100" aria-hidden="true"><use href="#ink-splat" /></svg>
+              <span class="piece-mount"></span>
+              <span class="hint-overlay"></span>
+              <span class="move-order-badge"></span>
+            </button>
+
+            <button type="button" class="palace-cell" id="cell-5" data-index="5" aria-label="兌七宮（右中）">
+              <span class="palace-rune">兌七</span>
+              <span class="threat-reticle"></span>
+              <svg class="hover-ghost" viewBox="0 0 100 100" aria-hidden="true"><use href="#seal-ren" /></svg>
+              <svg class="ink-splat-bg" viewBox="0 0 100 100" aria-hidden="true"><use href="#ink-splat" /></svg>
+              <span class="piece-mount"></span>
+              <span class="hint-overlay"></span>
+              <span class="move-order-badge"></span>
+            </button>
+
+            <button type="button" class="palace-cell" id="cell-6" data-index="6" aria-label="艮八宮（左下）">
+              <span class="palace-rune">艮八</span>
+              <span class="threat-reticle"></span>
+              <svg class="hover-ghost" viewBox="0 0 100 100" aria-hidden="true"><use href="#seal-ren" /></svg>
+              <svg class="ink-splat-bg" viewBox="0 0 100 100" aria-hidden="true"><use href="#ink-splat" /></svg>
+              <span class="piece-mount"></span>
+              <span class="hint-overlay"></span>
+              <span class="move-order-badge"></span>
+            </button>
+
+            <button type="button" class="palace-cell" id="cell-7" data-index="7" aria-label="坎一宮（中下）">
+              <span class="palace-rune">坎一</span>
+              <span class="threat-reticle"></span>
+              <svg class="hover-ghost" viewBox="0 0 100 100" aria-hidden="true"><use href="#seal-ren" /></svg>
+              <svg class="ink-splat-bg" viewBox="0 0 100 100" aria-hidden="true"><use href="#ink-splat" /></svg>
+              <span class="piece-mount"></span>
+              <span class="hint-overlay"></span>
+              <span class="move-order-badge"></span>
+            </button>
+
+            <button type="button" class="palace-cell" id="cell-8" data-index="8" aria-label="乾六宮（右下）">
+              <span class="palace-rune">乾六</span>
+              <span class="threat-reticle"></span>
+              <svg class="hover-ghost" viewBox="0 0 100 100" aria-hidden="true"><use href="#seal-ren" /></svg>
+              <svg class="ink-splat-bg" viewBox="0 0 100 100" aria-hidden="true"><use href="#ink-splat" /></svg>
+              <span class="piece-mount"></span>
+              <span class="hint-overlay"></span>
+              <span class="move-order-badge"></span>
+            </button>
+
+            <svg id="board-vfx-svg" class="board-vfx-svg" viewBox="0 0 300 300" aria-hidden="true">
+              <g id="svg-veins-group"></g>
+              <g id="svg-slashes-group"></g>
+              <g id="svg-transient-group"></g>
+            </svg>
+
+            <div id="callout-layer" class="callout-overlay" aria-hidden="true"></div>
+          </div>
+        </div>
+
+        <!-- Move counter -->
+        <div class="compact-9seal-strip">
+          <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:5px;">
+            <span style="font-family:var(--font-ui);font-size:0.74rem;font-weight:700;">
+              落子進度：<strong id="move-progress-text" style="color:var(--ren-crimson);">0 / 9 印</strong>
+            </span>
+            <span id="first-vein-badge" class="first-vein-pill">九印落滿才結算</span>
+          </div>
+          <div id="seal-beads" class="nine-beads-track" aria-label="九印落子進度條">
+            <span class="seal-step-bead"></span>
+            <span class="seal-step-bead"></span>
+            <span class="seal-step-bead"></span>
+            <span class="seal-step-bead"></span>
+            <span class="seal-step-bead"></span>
+            <span class="seal-step-bead"></span>
+            <span class="seal-step-bead"></span>
+            <span class="seal-step-bead"></span>
+            <span class="seal-step-bead"></span>
+          </div>
+        </div>
+
+        <!-- Inline result and rematch -->
+        <div id="finale-banner" class="finale-result-bar" style="max-width:100%;" role="status" aria-live="polite">
+          <div>
+            <div id="finale-title" class="finale-headline">對局結束</div>
+            <div id="finale-detail" class="finale-subtext"></div>
+          </div>
+          <div class="finale-btn-group">
+            <button type="button" id="btn-end-rematch" class="btn-primary-seal" style="min-width:100px;padding:8px 12px;">再戰一局</button>
+            <button type="button" id="btn-end-exit" class="btn-secondary-seal">回主選單</button>
+          </div>
+        </div>
+
+        <!-- Round controls -->
+        <div class="arena-bottom-controls" style="max-width:100%;">
+          <div class="arena-action-buttons">
+            <button type="button" id="btn-restart" class="btn-primary-seal">🔄 重新布陣（新回合）</button>
+            <button type="button" id="btn-reset-stats" class="btn-secondary-seal">戰績歸零</button>
+          </div>
+        </div>
+      </section>
+
+      <!-- RIGHT WING: NINE-TAILED KITSUNE BOSS (玉藻前 — 電腦後手 4 印・100% 不敗) -->
+      <aside class="duelist-wing" aria-label="電腦後手九尾妖狐舞台">
+        <div id="boss-fighter-card" class="tall-rig-viewport boss-viewport">
+          <canvas id="boss-rig-canvas" class="rig-canvas" width="280" height="330" aria-label="可動骨骼角色：九尾妖狐・玉藻前"></canvas>
+          <div class="voice-live-pill">
+            <span class="voice-wave-dot"></span>
+            <span class="voice-wave-dot"></span>
+            <span class="voice-wave-dot"></span>
+            <span>玉藻前・發聲中</span>
+          </div>
+          <svg class="fighter-seal-mini" viewBox="0 0 100 100" aria-hidden="true" style="width:36px;height:36px;">
+            <use href="#seal-tamamo" />
+          </svg>
+          <div class="wing-footer-overlay">
+            <div>
+              <div class="wing-role-label">電腦後手 · 100% 不敗 AI</div>
+              <div class="wing-char-name">九尾妖狐・玉藻前</div>
+            </div>
+            <div class="wing-vein-counter">
+              <span id="ai-vein-score" class="wing-vein-num">0</span>
+              <span class="wing-vein-unit">道靈脈</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Kitsune Live Spoken Banter -->
+        <div class="battle-banter-box">
+          <div class="banter-speaker">
+            <span id="banter-speaker-name">九尾妖狐・玉藻前</span>
+            <span id="banter-mood-tag">【好整以暇】</span>
+          </div>
+          <p id="banter-line-text" class="banter-text">
+            「落下你的第一印吧，陰陽師。」
+          </p>
+        </div>
+
+        <!-- Boss 4-Move Escalating Yokai Spell Chain -->
+        <div class="spell-chain-card boss-chain hw06-hidden">
+          <div class="spell-chain-title">
+            <span>🦊 後手四印・九尾妖術招式鏈</span>
+            <span>4 招遞進</span>
+          </div>
+          <div id="boss-spell-list" class="spell-step-list">
+            <div class="spell-step-item next-up" data-boss-slot="0"><span>第 2 印 · 狐火連彈百鬼燈</span><span>追尾</span></div>
+            <div class="spell-step-item" data-boss-slot="1"><span>第 4 印 · 千本夜櫻迷陣</span><span>鳥居</span></div>
+            <div class="spell-step-item" data-boss-slot="2"><span>第 6 印 · 殺生石蒼紫妖雷</span><span>天罰</span></div>
+            <div class="spell-step-item" data-boss-slot="3"><span>第 8 印 · 九尾天狐滅界炮</span><span>極光</span></div>
+          </div>
+        </div>
+
+        <!-- Cumulative Scoreboard -->
+        <div class="session-stats-grid" aria-label="累計對局戰績">
+          <div class="session-stat-card">
+            <div id="stat-human-wins" class="session-stat-num">0</div>
+            <div class="session-stat-label">陰陽師勝</div>
+          </div>
+          <div class="session-stat-card">
+            <div id="stat-draws" class="session-stat-num">0</div>
+            <div class="session-stat-label">陰陽相衡(和)</div>
+          </div>
+          <div class="session-stat-card">
+            <div id="stat-ai-wins" class="session-stat-num">0</div>
+            <div class="session-stat-label">玉藻前勝</div>
+          </div>
+        </div>
+      </aside>
+    </main>
+  </div>
+
+  <!-- ========================================================================
+       Self-Playing Widescreen 2D Animated Anime Cinema Cutscene Overlay
+       - Dialogue advances each scene after the voice clip ends.
+       ======================================================================== -->
+  <section id="cinema-overlay" class="cinema-overlay" role="dialog" aria-modal="true" aria-label="百鬼夜行劇情動畫演出">
+    <div class="cinema-viewport-frame">
+      <canvas id="cinema-canvas" width="1280" height="720"></canvas>
+
+      <div class="cinema-letterbox-top">
+        <div id="cinema-title-badge" class="cinema-episode-badge">
+          序章動畫 · 血月百鬼與晴明傳人
+        </div>
+        <div class="cinema-live-tag">
+          <span class="cinema-rec-dot" aria-hidden="true"></span>
+          <span>ANIME CINEMA · 全角色配音演武中</span>
+        </div>
+      </div>
+
+      <div class="cinema-letterbox-bottom">
+        <div class="cinema-subtitle-stage">
+          <div id="cinema-speaker" class="cinema-speaker-chip">神樂坂 蓮</div>
+          <p id="cinema-subtitle" class="cinema-subtitle-line"></p>
+        </div>
+        <div class="cinema-progress-track" aria-hidden="true">
+          <div id="cinema-progress-fill" class="cinema-progress-fill"></div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Diagonal Anime Ultimate Cut-In Banner -->
+  <div id="anime-cutin" class="anime-cutin-overlay" aria-hidden="true">
+    <div class="cutin-slash-band">
+      <div class="cutin-speedlines"></div>
+      <div class="cutin-portrait-crop">
+        <img id="cutin-img" src="./assets/char_tamamo.jpg" alt="" />
+      </div>
+      <div class="cutin-text-block">
+        <div id="cutin-sub" class="cutin-sub">YOKAI COUNTER ART</div>
+        <div id="cutin-title" class="cutin-skill-title">九尾妖術・蒼炎落雷破陣！</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Rules & Variations Modal -->
+  <div id="rules-modal" class="vn-backlog-modal" role="dialog" aria-modal="true" aria-labelledby="rules-modal-heading">
+    <div class="vn-backlog-box" style="max-width:640px;">
+      <div style="display:flex;justify-content:space-between;align-items:center;border-bottom:1px solid rgba(224,173,70,0.28);padding-bottom:10px;">
+        <h2 id="rules-modal-heading" style="font-family:var(--font-brush);font-size:1.22rem;color:var(--ren-gold-bright);">📜 1142949 HW06 規則、動態與變化設計說明</h2>
+        <button type="button" id="btn-close-rules" class="chip-btn">關閉</button>
+      </div>
+      <div style="overflow-y:auto;display:flex;flex-direction:column;gap:10px;font-size:0.86rem;color:var(--txt-secondary);line-height:1.65;">
+        <p><strong>落子順序</strong>　你執金紅御守先下，玉藻前執青色狐印後下。電腦用 Minimax 推演到終局，最差可守成和局。</p>
+        <p><strong>勝負判定</strong>　九印全部落下後，比較雙方的三連線數。線數相同且雙方都有成線時，先成線者勝出。雙方皆無成線時為和局。</p>
+        <p><strong>棋盤演出</strong>　中央、邊格與角落會改變飛行路徑和棋盤傾角。第一、第五手與玩家成功封格時會降下主題黃符。首次成線會亮出直線，雙方繼續下到九印全滿。一次開出兩個成線點時，兩個目標以光帶與光圈標出。</p>
+        <p><strong>操作</strong>　滑鼠點選空格，或用 Tab 移動後按 Enter。可開啟提示，查看哪些走法能守成和局。片頭與結局會跟著台詞自動前進。</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- Game scripts -->
+  <script src="./js/story-data.js" defer></script>
+  <script src="./js/bgm-audio.js" defer></script>
+  <script src="./js/voice-lines.js" defer></script>
+  <script src="./assets/voice/manifest.js" defer onerror="void 0"></script>
+  <script src="./js/voice-clips.js" defer></script>
+  <script src="./js/art-layers.js" defer></script>
+  <script src="./js/portrait-actor.js" defer></script>
+  <script src="./js/spell-arsenal.js" defer></script>
+  <script src="./js/anime-cinema-art.js" defer></script>
+  <script src="./js/key-move-shots.js" defer></script>
+  <script src="./js/minimax-ai.js" defer></script>
+  <script src="./js/board-dynamics.js" defer></script>
+  <script src="./js/seal-flight.js" defer></script>
+  <script src="./js/board-spectacle.js" defer></script>
+  <script src="./js/vfx-engine.js" defer></script>
+  <script src="./js/arena-effects.js" defer></script>
+  <script src="./js/board-choreography.js" defer></script>
+  <script src="./js/game-app.js" defer></script>
+</body>
+</html>
